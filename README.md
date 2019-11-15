@@ -1,5 +1,17 @@
 # HabitTracker
+
 Habit tracker project for LBS
+
+Plan:
+1. Thema
+2. Gruppe
+3. Konzept / PSP / Zeitplan
+4. Begleitende Doku
+5. Projektdoku
+6. Projektanschluss
+7. Präsentation
+
+
 
 [Flutter Get Started](https://flutter.dev/docs/get-started/)
 
