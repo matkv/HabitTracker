@@ -26,3 +26,9 @@ Eigene Notizen:
 
 [https://matkv.github.io/flutterfirstapp.html](https://matkv.github.io/flutterfirstapp.html)
 
+Bildschirme Aufteilung:
+
+- Startbildschirm (Statistiken & Strähnen, evt. Einstellungen)
+- Allgemeine Habits
+- Tägliche Aufgaben
+- To-Do List
