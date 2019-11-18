@@ -11,8 +11,6 @@ Plan:
 6. Projektanschluss
 7. Präsentation
 
-
-
 [Flutter Get Started](https://flutter.dev/docs/get-started/)
 
 [Udacity Course](https://classroom.udacity.com/courses/ud905)
@@ -26,9 +24,26 @@ Eigene Notizen:
 
 [https://matkv.github.io/flutterfirstapp.html](https://matkv.github.io/flutterfirstapp.html)
 
-Bildschirme Aufteilung:
+## Bildschirme Aufteilung
 
 - Startbildschirm (Statistiken & Strähnen, evt. Einstellungen)
 - Allgemeine Habits
 - Tägliche Aufgaben
 - To-Do List
+
+
+## Doku
+
+Abgabe Rohkonzept 12.12.2019
+Endabgabe gebunden in Farbe: 16.01.2020
+Präsentationen ab 20.01.2020
+
+## Projektsteuerung
+
+Issue für jedes Arbeitspaket in Github erstellen, dann kann man das als erledigt markieren.
+
+## Tagebuch
+
+Excel Tabelle -> wird immer an eine E-Mail geschickt?
+
+Datum Zeitpunk Dauer, was gemacht wurde, Probleme, Quellen die benötigt wurden.
