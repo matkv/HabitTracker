@@ -16,6 +16,9 @@ Plan:
 * [Flutter Get Started](https://flutter.dev/docs/get-started/)
 * [Udacity Course](https://classroom.udacity.com/courses/ud905)
 * [First Flutter App](https://flutter.dev/docs/get-started/codelab)
+* [Kalender Library - flutter_calendar](https://pub.dev/packages/flutter_calendar)
+  * [Github](https://github.com/apptreesoftware/flutter_calendar)
+  * Achtung - BSD 2 Clause Lizenz - vielleicht muss etwas vermerkt werden
 
 
 Eigene Notizen:
