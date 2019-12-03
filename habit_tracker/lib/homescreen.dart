@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_calendar/flutter_calendar.dart';
+import 'package:habit_tracker/habit.dart';
+import 'package:habit_tracker/main.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -28,10 +30,11 @@ class HomeScreen extends StatelessWidget {
                     ),
                     IconButton(
                       icon: Icon(
-                        Icons.add_circle,
+                        Icons.arrow_forward,
                         color: Colors.red,
                         size: 35,
                       ),
+                      onPressed: goToDailyScreen(),
                     ),
                   ],
                 )),
@@ -57,10 +60,11 @@ class HomeScreen extends StatelessWidget {
                     ),
                     IconButton(
                       icon: Icon(
-                        Icons.add_circle,
+                        Icons.arrow_forward,
                         color: Colors.red,
                         size: 35,
                       ),
+                      onPressed: goToToDoScreen(),
                     ),
                   ],
                 )),
@@ -83,58 +87,99 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             Container(
-                margin: EdgeInsets.only(left: 10.0, right: 10.0),
-                height: 200.0,
-                child: Card(
-                  child: Text('test'),
-                )),
+              margin: EdgeInsets.only(left: 10.0, right: 10.0),
+              height: 200.0,
+              child: Card(
+                child: SizedBox(
+                  width: 160,
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        width: 140,
+                        margin: EdgeInsets.only(top: 5.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Icon(
+                              Icons.favorite,
+                              color: Colors.red,
+                              size: 20.0,
+                            ),
+                            Text(
+                              'Overview',
+                              style: TextStyle(fontSize: 17),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Divider(
+                        indent: 10.0,
+                        endIndent: 10.0,
+                        thickness: 1.0,
+                        color: Colors.red,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
+
+  goToToDoScreen() {
+    //TODO figure out how to control main pagecontroller from here
+  }
+
+  goToDailyScreen() {
+    //TODO
+  }
 }
 
-//TODO this is currently the same as daily habit previews
-//Just a spaceholder for now
-
 List<Widget> createTodoPreviews() {
-  List<List<String>> _testStrings = [
-    ['Workout', 'Do your daily workout'],
-    ['Reading', 'Continue with your book'],
-    ['Practise Guitar', 'Practise playing guitar']
+  List<Habit> _testTodoTasks = [
+    Habit.toDo("Buy milk", "Buy milk from the store", Icons.shopping_cart,
+        DateTime.now())
   ];
 
-  return _testStrings
-      .map((element) => Card(
+  return _testTodoTasks
+      .map((habit) => Card(
             child: SizedBox(
-              height: 120,
               width: 160,
               child: Column(
                 children: <Widget>[
                   Container(
                     width: 140,
+                    margin: EdgeInsets.only(top: 5.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         Icon(
-                          Icons.done_all,
+                          habit.icon,
                           color: Colors.red,
                           size: 20.0,
                         ),
                         Text(
-                          element[0],
+                          habit.title,
                           style: TextStyle(fontSize: 17),
                         ),
                       ],
                     ),
                   ),
+                  Divider(
+                    indent: 10.0,
+                    endIndent: 10.0,
+                    thickness: 1.0,
+                    color: Colors.red,
+                  ),
                   Row(
                     children: <Widget>[
                       Container(
-                        margin: EdgeInsets.all(5.0),
-                        width: 150,
-                        child: Text(element[1]),
+                        margin: EdgeInsets.all(10.0),
+                        width: 90,
+                        child: Text(habit.description),
                       ),
                     ],
                   ),
@@ -146,43 +191,48 @@ List<Widget> createTodoPreviews() {
 }
 
 List<Widget> createHabitPreviews() {
-  List<List<String>> _testStrings = [
-    ['Workout', 'Do your daily workout'],
-    ['Reading', 'Continue with your book'],
-    ['Practise Guitar', 'Practise playing guitar']
+  List<Habit> _testHabits = [
+    Habit("Workout", "Do your daily workout", Icons.ac_unit),
+    Habit("Read", "Continue with your book", Icons.book),
+    Habit("Music", "Listen to some music", Icons.music_note)
   ];
 
-  return _testStrings
-      .map((element) => Card(
+  return _testHabits
+      .map((habit) => Card(
             child: SizedBox(
-              height: 120,
               width: 160,
               child: Column(
                 children: <Widget>[
                   Container(
                     width: 140,
+                    margin: EdgeInsets.only(top: 5.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         Icon(
-                          Icons.done_all,
+                          habit.icon,
                           color: Colors.red,
                           size: 20.0,
                         ),
                         Text(
-                          element[0],
+                          habit.title,
                           style: TextStyle(fontSize: 17),
                         ),
                       ],
                     ),
                   ),
+                  Divider(
+                    indent: 10.0,
+                    endIndent: 10.0,
+                    thickness: 1.0,
+                    color: Colors.red,
+                  ),
                   Row(
                     children: <Widget>[
                       Container(
-                        margin: EdgeInsets.all(5.0),
-                        width: 150,
-                        child: Text(element[1]),
-                      ),
+                          margin: EdgeInsets.all(10.0),
+                          width: 140,
+                          child: Text(habit.description)),
                     ],
                   ),
                 ],

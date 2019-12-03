@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/bottomnavigation.dart';
 
 class HabitsScreen extends StatelessWidget {
   @override
