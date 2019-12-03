@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/bottomnavigation.dart';
 import 'package:flutter/services.dart';
 import 'package:habit_tracker/dailyscreen.dart';
 import 'package:habit_tracker/habitsscreen.dart';
@@ -25,6 +24,7 @@ class HabitTracker extends StatelessWidget {
 }
 
 class App extends StatefulWidget {
+  final ValueNotifier<double> notifier = null;
   @override
   State<StatefulWidget> createState() {
     return _AppState();
@@ -59,7 +59,24 @@ class _AppState extends State<App> {
           ToDoScreen()
         ],
       ),
-      bottomNavigationBar: BottomNavigation(goToPage),
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        child: BottomNavigationBar(
+          onTap: onNavigationItemTapped,
+          type: BottomNavigationBarType.fixed, //this fixes shifting
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+                title: Text('Home'), icon: Icon(Icons.home)),
+            BottomNavigationBarItem(
+                title: Text('Habits'), icon: Icon(Icons.check_circle_outline)),
+            BottomNavigationBarItem(
+                title: Text('Day'), icon: Icon(Icons.calendar_today)),
+            BottomNavigationBarItem(
+                title: Text('To Do'), icon: Icon(Icons.assignment_turned_in)),
+          ],
+          currentIndex: selectedIndex,
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
           onPressed: () {},
           tooltip: 'Create Habit',
@@ -71,16 +88,17 @@ class _AppState extends State<App> {
 
   pageChanged(int index) {
     setState(() {
+      //update index which is used to set the current page in navigation bar
       selectedIndex = index;
     });
   }
 
-  //animate a pageview swipe when bottomnavigation button is pressed
-  void goToPage(int index) {
+  void onNavigationItemTapped(int itemIndex) {
+    //change page when navigation item is pressed
+    selectedIndex = itemIndex;
     setState(() {
-      selectedIndex = index;
-      pageController.animateToPage(index,
-          duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+      //animateToPage resulted in weird highlighting of the icons
+      pageController.jumpToPage(itemIndex);
     });
   }
 }
