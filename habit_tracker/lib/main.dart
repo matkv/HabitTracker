@@ -16,6 +16,9 @@ class HabitTracker extends StatelessWidget {
 
     return MaterialApp(
       theme: ThemeData(primarySwatch: Colors.red),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+      ),
       home: App(),
     );
   }

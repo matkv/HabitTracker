@@ -26,10 +26,12 @@ class HomeScreen extends StatelessWidget {
                       'Daily Habits',
                       style: TextStyle(fontSize: 25),
                     ),
-                    Icon(
-                      Icons.add_circle,
-                      color: Colors.red,
-                      size: 35,
+                    IconButton(
+                      icon: Icon(
+                        Icons.add_circle,
+                        color: Colors.red,
+                        size: 35,
+                      ),
                     ),
                   ],
                 )),
@@ -45,22 +47,23 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
             Container(
-              margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    'Today\'s Tasks',
-                    style: TextStyle(fontSize: 25),
-                  ),
-                  Icon(
-                    Icons.add_circle,
-                    color: Colors.red,
-                    size: 35,
-                  )
-                ],
-              )
-            ),
+                margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      'Today\'s Tasks',
+                      style: TextStyle(fontSize: 25),
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        Icons.add_circle,
+                        color: Colors.red,
+                        size: 35,
+                      ),
+                    ),
+                  ],
+                )),
             Column(
               children: <Widget>[
                 Container(
