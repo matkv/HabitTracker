@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_calendar/flutter_calendar.dart';
@@ -41,7 +42,7 @@ class HomeScreen extends StatelessWidget {
             Column(
               children: <Widget>[
                 Container(
-                    height: 120,
+                    height: 150,
                     margin: EdgeInsets.only(left: 10.0, right: 10.0),
                     child: ListView(
                       scrollDirection: Axis.horizontal,
@@ -91,36 +92,63 @@ class HomeScreen extends StatelessWidget {
               height: 200.0,
               child: Card(
                 child: SizedBox(
-                  width: 160,
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        width: 140,
-                        margin: EdgeInsets.only(top: 5.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            Icon(
-                              Icons.favorite,
-                              color: Colors.red,
-                              size: 20.0,
+                    width: 140,
+                    child: Container(
+                      margin: EdgeInsets.only(left: 10, right: 10),
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            width: 140,
+                            margin: EdgeInsets.only(top: 5.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                Icon(
+                                  Icons.favorite,
+                                  color: Colors.red,
+                                  size: 20.0,
+                                ),
+                                Text(
+                                  'Overview',
+                                  style: TextStyle(fontSize: 17),
+                                ),
+                              ],
                             ),
-                            Text(
-                              'Overview',
-                              style: TextStyle(fontSize: 17),
-                            ),
-                          ],
-                        ),
+                          ),
+                          Divider(
+                            indent: 10.0,
+                            endIndent: 10.0,
+                            thickness: 1.0,
+                            color: Colors.red,
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.calendar_today,
+                                    size: 35,
+                                    color: Colors.red,
+                                  ),
+                                  Text(
+                                    'December 2019',
+                                    style: TextStyle(fontSize: 20),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text(
+                                '4 Days',
+                                style: TextStyle(fontSize: 30),
+                              )
+                            ],
+                          )
+                        ],
                       ),
-                      Divider(
-                        indent: 10.0,
-                        endIndent: 10.0,
-                        thickness: 1.0,
-                        color: Colors.red,
-                      ),
-                    ],
-                  ),
-                ),
+                    )),
               ),
             ),
           ],
@@ -227,17 +255,75 @@ List<Widget> createHabitPreviews() {
                     thickness: 1.0,
                     color: Colors.red,
                   ),
-                  Row(
-                    children: <Widget>[
-                      Container(
+                  Expanded(
+                    child: Row(
+                      children: <Widget>[
+                        Container(
                           margin: EdgeInsets.all(10.0),
                           width: 140,
-                          child: Text(habit.description)),
-                    ],
+                          child: Text(
+                            habit.description,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(left: 10, right: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          new DateCircle.isChecked(true),
+                          new DateCircle.isChecked(true),
+                          new DateCircle.isChecked(false),
+                          new DateCircle.isChecked(false),
+                          new DateCircle.isChecked(true),
+                        ],
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
           ))
       .toList();
+}
+
+class DateCircle extends StatelessWidget {
+  Icon icon;
+  Color borderColor;
+  Color circleColor;
+
+  DateCircle.isChecked(bool isChecked) {
+    if (isChecked) {
+      circleColor = Colors.white;
+      icon = Icon(
+        Icons.done,
+        color: Colors.red,
+        size: 18,
+      );
+    } else {
+      circleColor = Colors.red;
+      icon = Icon(
+        Icons.close,
+        color: Colors.white,
+        size: 18,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: icon,
+      width: 25.0,
+      height: 25.0,
+      decoration: new BoxDecoration(
+        border: Border.all(color: Colors.red),
+        color: circleColor,
+        shape: BoxShape.circle,
+      ),
+    );
+  }
 }
