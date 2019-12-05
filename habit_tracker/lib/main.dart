@@ -4,6 +4,7 @@ import 'package:habit_tracker/dailyscreen.dart';
 import 'package:habit_tracker/habitsscreen.dart';
 import 'package:habit_tracker/homescreen.dart';
 import 'package:habit_tracker/todoscreen.dart';
+import 'package:habit_tracker/addhabit.dart';
 
 void main() => runApp(HabitTracker());
 
@@ -78,7 +79,10 @@ class _AppState extends State<App> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => AddHabit()));
+          },
           tooltip: 'Create Habit',
           elevation: 2.0,
           child: Icon(Icons.add_circle)),
