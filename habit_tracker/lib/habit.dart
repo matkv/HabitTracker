@@ -9,6 +9,8 @@ class Habit {
   IconData icon;
   DateTime duedate;
 
+  Habit.dataBaseTest(this.id, this.title, this.description);
+
   //default constructor for normal habit
   Habit(this.title, this.description, this.icon);
 

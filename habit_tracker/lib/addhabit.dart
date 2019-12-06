@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
+
+import 'package:habit_tracker/habitdatabase.dart';
+import 'package:habit_tracker/habit.dart';
 
 class AddHabit extends StatefulWidget {
   @override
@@ -106,7 +110,12 @@ class _NewHabitState extends State<NewHabitDialog> {
                   onPressed: () {
                     if (_formKey.currentState.validate()) {
 
-                      //TODO
+                      Habit newHabit = Habit.dataBaseTest(2, 'Wasser trinken', 'Jeden Tag Wasser trinken');
+
+
+                      var database = HabitDatabase();
+                      database.insertHabit(newHabit);
+
                       //Connect to database / create if doesn't exist
                       //Create habit object from values in form
                       //And insert it into database
