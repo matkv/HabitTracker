@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:habit_tracker/habitdatabase.dart';
 import 'package:habit_tracker/habit.dart';
@@ -70,6 +71,11 @@ class NewHabitDialog extends StatefulWidget {
 
 class _NewHabitState extends State<NewHabitDialog> {
   final _formKey = GlobalKey<FormState>();
+  final dbHelper = HabitDatabase.instance;
+
+  String _title;
+  String _description;
+  String _type = "todo";
 
   @override
   Widget build(BuildContext context) {
@@ -100,6 +106,43 @@ class _NewHabitState extends State<NewHabitDialog> {
                     },
                     decoration: InputDecoration(
                         hintText: 'Enter the name of the habit'),
+                    onSaved: (value) {
+                      setState(() {
+                        _title = value;
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                Text(
+                  'Description',
+                  style: TextStyle(fontSize: 25),
+                ),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                Container(
+                  width: 250,
+                  child: TextFormField(
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    decoration: InputDecoration(
+                        hintText: 'Enter a description of the habit'),
+                    onSaved: (value) {
+                      setState(() {
+                        _description = value;
+                      });
+                    },
                   ),
                 ),
               ],
@@ -107,24 +150,35 @@ class _NewHabitState extends State<NewHabitDialog> {
             Row(
               children: <Widget>[
                 RaisedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState.validate()) {
+                      _formKey.currentState.save();
 
-                      Habit newHabit = Habit.dataBaseTest(2, 'Wasser trinken', 'Jeden Tag Wasser trinken');
+                      Habit currentHabit =
+                          new Habit.createHabit(_title, _description, _type);
 
+                      final dbHelper = HabitDatabase.instance;
+                      dbHelper.insertHabit(currentHabit);
 
-                      var database = HabitDatabase();
-                      database.insertHabit(newHabit);
-
-                      //Connect to database / create if doesn't exist
-                      //Create habit object from values in form
-                      //And insert it into database
-
-                      _formKey.currentState.save(); //TODO needed?
+                      Fluttertoast.showToast(msg: "Habit created succesfully");
                     }
                   },
                   child: Text('Create'),
-                )
+                ),
+                RaisedButton(
+                  onPressed: () async {
+                    //THIS WORKS!!!!!!!!!!!!!!
+                    dbHelper.queryAllRows().then((value) {
+                      var test = value;
+                    });
+
+                    dbHelper.getTodoHabits().then((value){
+                      var test = value;
+                    });
+
+                    setState(() {});
+                  },
+                ),
               ],
             )
           ],

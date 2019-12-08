@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habit_tracker/dailyscreen.dart';
+import 'package:habit_tracker/habitdatabase.dart';
 import 'package:habit_tracker/habitsscreen.dart';
 import 'package:habit_tracker/homescreen.dart';
 import 'package:habit_tracker/todoscreen.dart';
@@ -33,6 +34,9 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
+
+  final dbHelper = HabitDatabase.instance;
+
   int selectedIndex = 0;
 
   PageController pageController = PageController(

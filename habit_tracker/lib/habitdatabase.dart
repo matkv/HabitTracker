@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:async' as prefix0;
+
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:io';
@@ -6,12 +9,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:habit_tracker/habit.dart';
 
 class HabitDatabase {
-  // TODO create function that creates or opens the database (maybe on localpath directory)
-  // TODO create function that takes a habit object and inserts it into the database
-
-  // NEW TUTORIAL
-  // https://medium.com/@suragch/simple-sqflite-database-example-in-flutter-e56a5aaa3f91
-
   static final _databaseName = "habit_database.db";
   static final _databaseVersion = 1;
 
@@ -20,15 +17,17 @@ class HabitDatabase {
   static final columnId = '_id';
   static final columnName = 'name';
   static final columnDescription = 'description';
-
-  // TODO change names
+  static final columnType = 'type';
+  static final columnDueDate = 'duedate';
 
   // make this a singleton class
   HabitDatabase._constructor();
+
   static final HabitDatabase instance = HabitDatabase._constructor();
 
   //single app-wide reference to the database
   static Database _database;
+
   Future<Database> get database async {
     if (_database != null) return _database;
 
@@ -44,48 +43,101 @@ class HabitDatabase {
     String path = join(documentsDirectory.path, _databaseName);
 
     return await openDatabase(path,
-    version: _databaseVersion,
-    onCreate: _onCreate);
+        version: _databaseVersion, onCreate: _onCreate);
   }
 
   //SQL code to create the database table
   Future _onCreate(Database db, int version) async {
-
-    //TODO continue here
-    //https://medium.com/@suragch/simple-sqflite-database-example-in-flutter-e56a5aaa3f91
+    await db.execute('''
+    CREATE TABLE $table (
+      $columnId INTEGER PRIMARY KEY,
+      $columnName TEXT NOT NULL,
+      $columnType TEXT NOT NULL,
+      $columnDescription TEXT,      
+      $columnDueDate DATETIME
+    )
+    ''');
   }
 
+  //Helper methods
 
+  // Inserts a row in the database where each key in the Map is a column name
+  // and the value is the column value
+  // The return value is the id of the inserted row
 
-  //TODO everything below this might not be needed anymore
-
-  Future<Database> database;
-
-  HabitDatabase() {
-    this.database = openDatabase(
-      join(_localPath.toString(), 'habit_database.db'),
-      onCreate: (db, version) {
-        return db.execute(
-            "CREATE TABLE habits(id INTEGER PRIMARY KEY, title TEXT, description TEXT");
-      },
-      version: 1,
-    );
+  Future<int> insert(Map<String, dynamic> row) async {
+    Database db = await instance.database;
+    return await db.insert(table, row);
   }
 
-  //Link https://flutter.dev/docs/cookbook/persistence/sqlite
+  //All of the rows are returned as a list of maps, where each map is a key-value
+  //list of columns
 
-  //this gets the local path where the database will be stored/created
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-    return directory.path;
+  Future<List<Map<String, dynamic>>> queryAllRows() async {
+    Database db = await instance.database;
+    return await db.query(table);
+  }
+
+  //Get row count in table (using raw query) - amount of habits stored
+  Future<int> queryRowCount() async {
+    Database db = await instance.database;
+
+    return Sqflite.firstIntValue(
+        await db.rawQuery('SELECT COUNT(*) FROM $table'));
+  }
+
+  Future<int> update(Map<String, dynamic> row) async {
+    Database db = await instance.database;
+    int id = row[columnId];
+    return await db.update(table, row, where: 'columnId = ?', whereArgs: [id]);
+  }
+
+//Deletes the row specified by the id. The number of affected rows is returned
+
+  Future<int> delete(int id) async {
+    Database db = await instance.database;
+
+    return await db.delete(table, where: '$columnId = ?', whereArgs: [id]);
+  }
+
+  Future<List<Habit>> getTodoHabits() async {
+    Database db = await instance.database;
+
+    List<Habit> listOfHabits = [];
+
+    await db
+        .rawQuery(
+            "SELECT $columnName, $columnDescription, $columnType FROM habits")
+        .then((value) {
+      List<Map> results = value;
+
+      if (results.length != 0) {
+        results.forEach((row) => listOfHabits.add(Habit.createHabit(
+            row[columnName], row[columnDescription], row[columnType]))); //TEMP
+      }
+    });
+
+    return listOfHabits;
+//
   }
 
   //add a habit object to the database
+  Future<bool> insertHabit(Habit habit) async {
+    try {
+      HabitDatabase db = instance;
 
-  Future<void> insertHabit(Habit habit) async {
-    final Database db = await database;
+      Map<String, dynamic> row = {
+        HabitDatabase.columnName: habit.title,
+        HabitDatabase.columnDescription: habit.description,
+        HabitDatabase.columnType: habit.type,
+        HabitDatabase.columnDueDate: habit.duedate
+      };
 
-    await db.insert('habits', habit.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
+      db.insert(row);
+      return true;
+    } on Exception catch (e) {
+      //TODO show toast maybe? or do this where insertHabit is called?
+      return false;
+    }
   }
 }

@@ -8,8 +8,9 @@ class Habit {
   String description;
   IconData icon;
   DateTime duedate;
+  String type;
 
-  Habit.dataBaseTest(this.id, this.title, this.description);
+  Habit.createHabit(this.title, this.description, this.type);
 
   //default constructor for normal habit
   Habit(this.title, this.description, this.icon);
@@ -22,6 +23,8 @@ class Habit {
       'id': id,
       'title': title,
       'description': description,
+      'duedate': duedate,
+      'type': type
     };
   }
 

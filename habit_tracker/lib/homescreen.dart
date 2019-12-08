@@ -4,8 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_calendar/flutter_calendar.dart';
 import 'package:habit_tracker/habit.dart';
 import 'package:habit_tracker/main.dart';
+import 'package:habit_tracker/habitdatabase.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  final dbHelper = HabitDatabase.instance;
+  @override
+  State<StatefulWidget> createState() {
+    return _HomeScreenState(dbHelper);
+  }
+
+}
+
+class _HomeScreenState extends State<HomeScreen>{
+  final dbHelper;
+
+  _HomeScreenState(this.dbHelper);
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -141,7 +156,7 @@ class HomeScreen extends StatelessWidget {
                           Row(
                             children: <Widget>[
                               Text(
-                                '4 Days',
+                                'Statistics',
                                 style: TextStyle(fontSize: 30),
                               )
                             ],
@@ -164,58 +179,71 @@ class HomeScreen extends StatelessWidget {
   goToDailyScreen() {
     //TODO
   }
-}
 
-List<Widget> createTodoPreviews() {
-  List<Habit> _testTodoTasks = [
-    Habit.toDo("Buy milk", "Buy milk from the store", Icons.shopping_cart,
-        DateTime.now())
-  ];
+  List<Widget> createTodoPreviews() {
 
-  return _testTodoTasks
-      .map((habit) => Card(
-            child: SizedBox(
-              width: 160,
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    width: 140,
-                    margin: EdgeInsets.only(top: 5.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    List<Habit> _habitsFromDatabase;
+
+    dbHelper.getTodoHabits().then((value){
+      setState(() {
+        _habitsFromDatabase = value;  //TODO CONTINUE HERE
+      });
+    });
+
+    List<Habit> _testTodoTasks = [
+      Habit.toDo("Buy milk", "Buy milk from the store", Icons.shopping_cart,
+          DateTime.now())
+    ];
+
+    if(_habitsFromDatabase == null) {
+
+    return [Center(child: Text('No tasks found'),)];
+    }
+    return _habitsFromDatabase
+        .map((habit) => Card(
+              child: SizedBox(
+                width: 160,
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      width: 140,
+                      margin: EdgeInsets.only(top: 5.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Icon(
+                            Icons.ac_unit,
+                            color: Colors.red,
+                            size: 20.0,
+                          ),
+                          Text(
+                            habit.title,
+                            style: TextStyle(fontSize: 17),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(
+                      indent: 10.0,
+                      endIndent: 10.0,
+                      thickness: 1.0,
+                      color: Colors.red,
+                    ),
+                    Row(
                       children: <Widget>[
-                        Icon(
-                          habit.icon,
-                          color: Colors.red,
-                          size: 20.0,
-                        ),
-                        Text(
-                          habit.title,
-                          style: TextStyle(fontSize: 17),
+                        Container(
+                          margin: EdgeInsets.all(10.0),
+                          width: 90,
+                          child: Text(habit.description),
                         ),
                       ],
                     ),
-                  ),
-                  Divider(
-                    indent: 10.0,
-                    endIndent: 10.0,
-                    thickness: 1.0,
-                    color: Colors.red,
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.all(10.0),
-                        width: 90,
-                        child: Text(habit.description),
-                      ),
-                    ],
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ))
-      .toList();
+            ))
+        .toList();
+  }
 }
 
 List<Widget> createHabitPreviews() {
