@@ -5,6 +5,7 @@ import 'package:flutter_calendar/flutter_calendar.dart';
 import 'package:habit_tracker/habit.dart';
 import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/habitdatabase.dart';
+import 'package:habit_tracker/todowidgetshomescreen.dart';
 
 class HomeScreen extends StatefulWidget {
   final dbHelper = HabitDatabase.instance;
@@ -89,10 +90,8 @@ class _HomeScreenState extends State<HomeScreen>{
                 Container(
                     height: 120,
                     margin: EdgeInsets.only(left: 10.0, right: 10.0),
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: createTodoPreviews(),
-                    ))
+                    child: ToDoWidgetsHomeScreen()
+                )
               ],
             ),
             Container(
@@ -180,70 +179,6 @@ class _HomeScreenState extends State<HomeScreen>{
     //TODO
   }
 
-  List<Widget> createTodoPreviews() {
-
-    List<Habit> _habitsFromDatabase;
-
-    dbHelper.getTodoHabits().then((value){
-      setState(() {
-        _habitsFromDatabase = value;  //TODO CONTINUE HERE
-      });
-    });
-
-    List<Habit> _testTodoTasks = [
-      Habit.toDo("Buy milk", "Buy milk from the store", Icons.shopping_cart,
-          DateTime.now())
-    ];
-
-    if(_habitsFromDatabase == null) {
-
-    return [Center(child: Text('No tasks found'),)];
-    }
-    return _habitsFromDatabase
-        .map((habit) => Card(
-              child: SizedBox(
-                width: 160,
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      width: 140,
-                      margin: EdgeInsets.only(top: 5.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Icon(
-                            Icons.ac_unit,
-                            color: Colors.red,
-                            size: 20.0,
-                          ),
-                          Text(
-                            habit.title,
-                            style: TextStyle(fontSize: 17),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Divider(
-                      indent: 10.0,
-                      endIndent: 10.0,
-                      thickness: 1.0,
-                      color: Colors.red,
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Container(
-                          margin: EdgeInsets.all(10.0),
-                          width: 90,
-                          child: Text(habit.description),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ))
-        .toList();
-  }
 }
 
 List<Widget> createHabitPreviews() {
