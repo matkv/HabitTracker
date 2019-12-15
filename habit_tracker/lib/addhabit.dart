@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -19,12 +21,9 @@ class _AddHabitState extends State<AddHabit> {
   }
 
   HabitCreator habitCreator;
-
   _AddHabitState(this.habitCreator);
 
   final key = new GlobalKey<_AddHabitState>();
-
-  NewToDoDialog nhDialog;
 
   @override
   Widget build(BuildContext context) {
@@ -88,6 +87,18 @@ class NewHabitDialog extends StatefulWidget {
   }
 }
 
+class HabitIcons {
+  static List<IconData> icons = [
+    Icons.offline_bolt,
+    Icons.ac_unit,
+    Icons.dashboard,
+    Icons.backspace,
+    Icons.cached,
+    Icons.edit,
+    Icons.face,
+  ];
+}
+
 class _NewHabitState extends State<NewHabitDialog> {
   final _formKey = GlobalKey<FormState>();
   final dbHelper = HabitDatabase.instance;
@@ -100,8 +111,14 @@ class _NewHabitState extends State<NewHabitDialog> {
   String _description;
   String _type = "todo";
 
+  List<IconData> _selectedIcons = [];
+
   @override
   Widget build(BuildContext context) {
+    /* if (_selectedIcons.length == 0){
+      _selectedIcons.add(HabitIcons.icons[0]); //Make first icon selected by default
+    };*/
+
     return Form(
       key: _formKey,
       child: Flex(
@@ -128,7 +145,7 @@ class _NewHabitState extends State<NewHabitDialog> {
                           child: TextFormField(
                             validator: (value) {
                               if (value.isEmpty) {
-                                return 'Please enter some text';
+                                return 'Please enter a title';
                               }
                               return null;
                             },
@@ -161,13 +178,13 @@ class _NewHabitState extends State<NewHabitDialog> {
                           child: TextFormField(
                             validator: (value) {
                               if (value.isEmpty) {
-                                return 'Please enter some text';
+                                return 'Please enter a description';
                               }
                               return null;
                             },
                             keyboardType: TextInputType.multiline,
                             maxLines: null,
-                            maxLength: 35,
+                            maxLength: 65,
                             decoration: InputDecoration(
                                 hintText: 'Enter a description of the habit'),
                             onSaved: (value) {
@@ -183,10 +200,44 @@ class _NewHabitState extends State<NewHabitDialog> {
                   Row(
                     children: <Widget>[
                       Text(
-                        'Description',
+                        'Icon',
                         style: TextStyle(fontSize: 25),
                       ),
                     ],
+                  ),
+                  FormField(
+                    autovalidate: false,
+                    validator: (value) {
+                      if (_selectedIcons.length == 0) {
+                        //TODO show some kind of warning
+
+                        return 'Please select an icon';
+                      }
+
+                      return null; //TODO check
+                    },
+                    builder: (FormFieldState<bool> state) {
+                      return SizedBox(
+                        height: 100,
+                        child: GridView.count(
+                          crossAxisCount: 6,
+                          crossAxisSpacing: 10.0,
+                          children: HabitIcons.icons.map((iconData) {
+                            return GestureDetector(
+                              onTap: () {
+                                _selectedIcons.clear();
+
+                                setState(() {
+                                  _selectedIcons.add(iconData);
+                                });
+                              },
+                              child: SelectableGridViewItem(
+                                  iconData, _selectedIcons.contains(iconData)),
+                            );
+                          }).toList(),
+                        ),
+                      );
+                    },
                   ),
                   Expanded(
                     flex: 2,
@@ -206,6 +257,29 @@ class _NewHabitState extends State<NewHabitDialog> {
           ),
         ],
       ),
+    );
+  }
+}
+
+//Selectable gridview
+
+class SelectableGridViewItem extends StatelessWidget {
+  final IconData _icon;
+  bool _isSelected;
+
+  SelectableGridViewItem(this._icon, this._isSelected);
+
+  //TODO cleanup
+
+  @override
+  Widget build(BuildContext context) {
+    return RawMaterialButton(
+      child: Icon(
+        _icon,
+      ),
+      shape: CircleBorder(),
+      fillColor: _isSelected ? Colors.red : Colors.grey,
+      onPressed: null,
     );
   }
 }
