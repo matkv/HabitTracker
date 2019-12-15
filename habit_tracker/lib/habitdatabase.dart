@@ -1,12 +1,12 @@
 import 'dart:async';
-import 'dart:async' as prefix0;
-
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:habit_tracker/habit.dart';
+import 'package:habit_tracker/habiticons.dart';
 
 class HabitDatabase {
   static final _databaseName = "habit_database.db";
@@ -19,6 +19,7 @@ class HabitDatabase {
   static final columnDescription = 'description';
   static final columnType = 'type';
   static final columnDueDate = 'duedate';
+  static final columnIcon = 'icon';
 
   // make this a singleton class
   HabitDatabase._constructor();
@@ -53,6 +54,7 @@ class HabitDatabase {
       $columnId INTEGER PRIMARY KEY,
       $columnName TEXT NOT NULL,
       $columnType TEXT NOT NULL,
+      $columnIcon TEXT NOT NULL,
       $columnDescription TEXT,      
       $columnDueDate DATETIME
     )
@@ -107,13 +109,13 @@ class HabitDatabase {
 
     await db
         .rawQuery(
-            "SELECT $columnName, $columnDescription, $columnType FROM habits")
+            "SELECT $columnName, $columnDescription, $columnType, $columnIcon FROM habits WHERE $columnType = 'todo'")
         .then((value) {
       List<Map> results = value;
 
       if (results.length != 0) {
         results.forEach((row) => listOfHabits.add(Habit.createHabit(
-            row[columnName], row[columnDescription], row[columnType]))); //TEMP
+            row[columnName], row[columnDescription], row[columnType], HabitIcons.IconsFromString[row[columnIcon]]))); //TEMP
       }
     });
 
@@ -125,18 +127,23 @@ class HabitDatabase {
   Future<bool> insertHabit(Habit habit) async {
     try {
       HabitDatabase db = instance;
+      
+      
 
       Map<String, dynamic> row = {
         HabitDatabase.columnName: habit.title,
         HabitDatabase.columnDescription: habit.description,
         HabitDatabase.columnType: habit.type,
+        HabitDatabase.columnIcon: HabitIcons.getStringFromIcon(habit.icon),
         HabitDatabase.columnDueDate: habit.duedate
       };
 
       db.insert(row);
       return true;
     } on Exception catch (e) {
-      //TODO show toast maybe? or do this where insertHabit is called?
+
+      var errormessage = e.toString();
+      Fluttertoast.showToast(msg: "Error: $errormessage");
       return false;
     }
   }

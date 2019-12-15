@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 
-import 'package:sqflite/sqflite.dart';
-
 class Habit {
   int id;
   String title;
@@ -10,7 +8,7 @@ class Habit {
   DateTime duedate;
   String type;
 
-  Habit.createHabit(this.title, this.description, this.type);
+  Habit.createHabit(this.title, this.description, this.type, this.icon);
 
   //default constructor for normal habit
   Habit(this.title, this.description, this.icon);
@@ -26,11 +24,5 @@ class Habit {
       'duedate': duedate,
       'type': type
     };
-  }
-
-  Future<void> insertHabit(Habit habit, Database database) async {
-    final Database db  = await database;
-
-    await db.insert('habits', habit.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
   }
 }

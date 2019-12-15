@@ -47,7 +47,7 @@ class _ToDoWidgetsHomeScreenState extends State<ToDoWidgetsHomeScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Icon(
-                            Icons.ac_unit,
+                            habit.icon,
                             color: Colors.red,
                             size: 20.0,
                           ),

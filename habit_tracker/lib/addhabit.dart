@@ -1,11 +1,8 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:habit_tracker/habitdatabase.dart';
-import 'package:habit_tracker/habit.dart';
+import 'package:habit_tracker/habiticons.dart';
+import 'package:habit_tracker/habitcreator.dart';
 
 class AddHabit extends StatefulWidget {
   @override
@@ -62,22 +59,12 @@ class _AddHabitState extends State<AddHabit> {
   }
 }
 
-class HabitCreator {
-  final dbHelper = HabitDatabase.instance;
 
-  void createNewHabit(String title, String description, String type) {
-    Habit currentHabit = new Habit.createHabit(title, description, type);
-
-    dbHelper.insertHabit(currentHabit);
-
-    Fluttertoast.showToast(msg: "Habit created succesfully");
-  }
-}
 
 //New habit dialog
 
 class NewHabitDialog extends StatefulWidget {
-  HabitCreator creator;
+  final HabitCreator creator;
 
   NewHabitDialog(this.creator);
 
@@ -85,18 +72,6 @@ class NewHabitDialog extends StatefulWidget {
   State<StatefulWidget> createState() {
     return _NewHabitState(creator);
   }
-}
-
-class HabitIcons {
-  static List<IconData> icons = [
-    Icons.offline_bolt,
-    Icons.ac_unit,
-    Icons.dashboard,
-    Icons.backspace,
-    Icons.cached,
-    Icons.edit,
-    Icons.face,
-  ];
 }
 
 class _NewHabitState extends State<NewHabitDialog> {
@@ -110,6 +85,7 @@ class _NewHabitState extends State<NewHabitDialog> {
   String _title;
   String _description;
   String _type = "todo";
+  IconData _icon;
 
   List<IconData> _selectedIcons = [];
 
@@ -229,6 +205,7 @@ class _NewHabitState extends State<NewHabitDialog> {
 
                                 setState(() {
                                   _selectedIcons.add(iconData);
+                                  _icon = iconData;
                                 });
                               },
                               child: SelectableGridViewItem(
@@ -246,7 +223,7 @@ class _NewHabitState extends State<NewHabitDialog> {
                       onPressed: () async {
                         if (_formKey.currentState.validate()) {
                           _formKey.currentState.save();
-                          creator.createNewHabit(_title, _description, _type);
+                          creator.createNewHabit(_title, _description, _type, _icon);
                         }
                       },
                     ),
