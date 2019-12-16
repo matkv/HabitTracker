@@ -224,6 +224,7 @@ class _NewHabitState extends State<NewHabitDialog> {
                         if (_formKey.currentState.validate()) {
                           _formKey.currentState.save();
                           creator.createNewHabit(_title, _description, _type, _icon);
+                          Navigator.pop(context);
                         }
                       },
                     ),

@@ -36,16 +36,16 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
 
   final dbHelper = HabitDatabase.instance;
-
   int selectedIndex = 0;
-
-  PageController pageController = PageController(
-    initialPage: 0,
-    keepPage: true,
-  );
+  PageController pageController;
 
   @override
   void initState() {
+    pageController = PageController(
+      initialPage: selectedIndex,
+      keepPage: true,
+    );
+
     super.initState();
   }
 
@@ -58,7 +58,7 @@ class _AppState extends State<App> {
           pageChanged(index);
         },
         children: <Widget>[
-          HomeScreen(),
+          HomeScreen(onNavigationItemTapped),
           HabitsScreen(),
           DailyScreen(),
           ToDoScreen()
@@ -102,11 +102,14 @@ class _AppState extends State<App> {
   }
 
   void onNavigationItemTapped(int itemIndex) {
-    //change page when navigation item is pressed
-    selectedIndex = itemIndex;
+
     setState(() {
+      //change page when navigation item is pressed
+      selectedIndex = itemIndex;
+
       //animateToPage resulted in weird highlighting of the icons
       pageController.jumpToPage(itemIndex);
     });
   }
+
 }

@@ -5,22 +5,25 @@ import 'package:flutter_calendar/flutter_calendar.dart';
 import 'package:habit_tracker/habit.dart';
 import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/habitdatabase.dart';
+import 'package:habit_tracker/todoscreen.dart';
 import 'package:habit_tracker/todowidgetshomescreen.dart';
 
 class HomeScreen extends StatefulWidget {
   final dbHelper = HabitDatabase.instance;
+  void Function(int itemIndex) navigateTo;
+  HomeScreen(this.navigateTo);
+
   @override
   State<StatefulWidget> createState() {
-    return _HomeScreenState(dbHelper);
+    return _HomeScreenState(dbHelper, navigateTo);
   }
-
 }
 
-class _HomeScreenState extends State<HomeScreen>{
+class _HomeScreenState extends State<HomeScreen> {
   final dbHelper;
+  void Function(int itemIndex) navigateTo;
 
-  _HomeScreenState(this.dbHelper);
-
+  _HomeScreenState(this.dbHelper, this.navigateTo);
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen>{
                         color: Colors.red,
                         size: 35,
                       ),
-                      onPressed: goToDailyScreen(),
+                      onPressed: () => goToDailyScreen(),
                     ),
                   ],
                 )),
@@ -81,7 +84,8 @@ class _HomeScreenState extends State<HomeScreen>{
                         color: Colors.red,
                         size: 35,
                       ),
-                      onPressed: goToToDoScreen(),
+                      onPressed: () => goToToDoScreen(),
+
                     ),
                   ],
                 )),
@@ -90,8 +94,7 @@ class _HomeScreenState extends State<HomeScreen>{
                 Container(
                     height: 120,
                     margin: EdgeInsets.only(left: 10.0, right: 10.0),
-                    child: ToDoWidgetsHomeScreen()
-                )
+                    child: ToDoWidgetsHomeScreen())
               ],
             ),
             Container(
@@ -171,14 +174,17 @@ class _HomeScreenState extends State<HomeScreen>{
     );
   }
 
-  goToToDoScreen() {
-    //TODO figure out how to control main pagecontroller from here
+  Future goToHabitScreen() async {
+    navigateTo(1);
   }
 
-  goToDailyScreen() {
-    //TODO
+  Future goToDailyScreen() async {
+    navigateTo(2);
   }
 
+  Future goToToDoScreen() async {
+    navigateTo(3);
+  }
 }
 
 List<Widget> createHabitPreviews() {
