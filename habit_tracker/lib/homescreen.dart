@@ -61,12 +61,13 @@ class _HomeScreenState extends State<HomeScreen> {
             Column(
               children: <Widget>[
                 Container(
-                    height: 150,
-                    margin: EdgeInsets.only(left: 10.0, right: 10.0),
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: createHabitPreviews(),
-                    ))
+                  height: 150,
+                  margin: EdgeInsets.only(left: 10.0, right: 10.0),
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: createHabitPreviews(),
+                  ),
+                )
               ],
             ),
             Container(
@@ -85,7 +86,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         size: 35,
                       ),
                       onPressed: () => goToToDoScreen(),
-
                     ),
                   ],
                 )),
