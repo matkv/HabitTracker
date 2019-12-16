@@ -6,6 +6,7 @@ import 'package:habit_tracker/habitsscreen.dart';
 import 'package:habit_tracker/homescreen.dart';
 import 'package:habit_tracker/todoscreen.dart';
 import 'package:habit_tracker/addhabit.dart';
+import 'package:page_transition/page_transition.dart';
 
 void main() => runApp(HabitTracker());
 
@@ -34,7 +35,6 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-
   final dbHelper = HabitDatabase.instance;
   int selectedIndex = 0;
   PageController pageController;
@@ -84,8 +84,14 @@ class _AppState extends State<App> {
       ),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
+//            Navigator.push(
+//                context, MaterialPageRoute(builder: (context) => AddHabit()));
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => AddHabit()));
+                context,
+                PageTransition(
+                    duration: Duration(milliseconds: 250),
+                    type: PageTransitionType.downToUp,
+                    child: AddHabit()));
           },
           tooltip: 'Create Habit',
           elevation: 2.0,
@@ -102,7 +108,6 @@ class _AppState extends State<App> {
   }
 
   void onNavigationItemTapped(int itemIndex) {
-
     setState(() {
       //change page when navigation item is pressed
       selectedIndex = itemIndex;
@@ -111,5 +116,4 @@ class _AppState extends State<App> {
       pageController.jumpToPage(itemIndex);
     });
   }
-
 }
