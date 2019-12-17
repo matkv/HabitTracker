@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_calendar/flutter_calendar.dart';
 import 'package:habit_tracker/habit.dart';
-import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/habitdatabase.dart';
-import 'package:habit_tracker/todoscreen.dart';
 import 'package:habit_tracker/todowidgetshomescreen.dart';
 
 class HomeScreen extends StatefulWidget {
