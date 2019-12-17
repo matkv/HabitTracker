@@ -14,4 +14,8 @@ class HabitCreator {
 
     Fluttertoast.showToast(msg: "Habit created succesfully");
   }
+
+  void createDaily(String title, String description, String type, IconData icon, List<String> weekdays){
+    //TODO
+  }
 }

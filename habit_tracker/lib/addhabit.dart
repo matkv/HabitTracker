@@ -60,7 +60,7 @@ class _AddHabitState extends State<AddHabit> {
                   child: TabBarView(
                     children: <Widget>[
                       NewHabitDialog(habitCreator),
-                      NewDailyDialog(),
+                      NewDailyDialog(habitCreator),
                       NewToDoDialog(),
                     ],
                   ),

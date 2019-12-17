@@ -136,7 +136,7 @@ class _NewHabitState extends State<NewHabitDialog> {
                   return SizedBox(
                     height: 50,
                     child: GridView.count(
-                      crossAxisCount: 6,
+                      crossAxisCount: 7,
                       crossAxisSpacing: 10.0,
                       children: HabitIcons.icons.map((iconData) {
                         return GestureDetector(
