@@ -102,33 +102,12 @@ class HabitDatabase {
     return await db.delete(table, where: '$columnId = ?', whereArgs: [id]);
   }
 
-  Future<List<Habit>> getTodoHabits() async {
-    Database db = await instance.database;
-
-    List<Habit> listOfHabits = [];
-
-    await db
-        .rawQuery(
-            "SELECT $columnName, $columnDescription, $columnType, $columnIcon FROM habits WHERE $columnType = 'todo'")
-        .then((value) {
-      List<Map> results = value;
-
-      if (results.length != 0) {
-        results.forEach((row) => listOfHabits.add(Habit.createHabit(
-            row[columnName], row[columnDescription], row[columnType], HabitIcons.IconsFromString[row[columnIcon]]))); //TEMP
-      }
-    });
-
-    return listOfHabits;
-//
-  }
-
   //add a habit object to the database
   Future<bool> insertHabit(Habit habit) async {
     try {
       HabitDatabase db = instance;
-      
-      
+
+      //TODO WEEKDAYS ARE MISSING
 
       Map<String, dynamic> row = {
         HabitDatabase.columnName: habit.title,
@@ -141,10 +120,80 @@ class HabitDatabase {
       db.insert(row);
       return true;
     } on Exception catch (e) {
-
       var errormessage = e.toString();
       Fluttertoast.showToast(msg: "Error: $errormessage");
       return false;
     }
+  }
+
+  Future<List<Habit>> getHabits() async {
+    Database db = await instance.database;
+    List<Habit> listOfHabits = [];
+
+    await db
+        .rawQuery(
+            "SELECT $columnName, $columnDescription, $columnType, $columnIcon FROM habits WHERE $columnType = 'habit'")
+        .then((value) {
+      List<Map> results = value;
+
+      if (results.length != 0) {
+        results.forEach((row) => listOfHabits.add(Habit.createHabit(
+            row[columnName],
+            row[columnDescription],
+            row[columnType],
+            HabitIcons.IconsFromString[row[columnIcon]])));
+      }
+    });
+    return listOfHabits;
+  }
+
+  Future<List<Habit>> getDailyHabits() async {
+    Database db = await instance.database;
+    List<Habit> listOfHabits = [];
+
+    //TODO WEEKDAYS ARE MISSING HERE
+
+    await db
+        .rawQuery(
+            "SELECT $columnName, $columnDescription, $columnType, $columnIcon FROM habits WHERE $columnType = 'daily'")
+        .then((value) {
+      List<Map> results = value;
+
+      List<String> tempWeekDays = ['Monday', 'Wednesday', 'Saturday'];
+
+      if (results.length != 0) {
+        results.forEach((row) => listOfHabits.add((Habit.createDaily(
+            row[columnName],
+            row[columnDescription],
+            row[columnType],
+            row[columnIcon],
+            tempWeekDays))));
+      }
+    });
+
+    return listOfHabits;
+  }
+
+  Future<List<Habit>> getTodoHabits() async {
+    Database db = await instance.database;
+
+    List<Habit> listOfHabits = [];
+
+    await db
+        .rawQuery(
+            "SELECT $columnName, $columnDescription, $columnType, $columnIcon, $columnDueDate FROM habits WHERE $columnType = 'todo'")
+        .then((value) {
+      List<Map> results = value;
+
+      if (results.length != 0) {
+        results.forEach((row) => listOfHabits.add(Habit.createHabit(
+            row[columnName],
+            row[columnDescription],
+            row[columnType],
+            HabitIcons.IconsFromString[row[columnIcon]]))); //TEMP
+      }
+    });
+
+    return listOfHabits;
   }
 }

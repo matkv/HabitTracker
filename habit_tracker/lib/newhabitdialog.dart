@@ -166,7 +166,7 @@ class _NewHabitState extends State<NewHabitDialog> {
                     onPressed: () async {
                       if (_formKey.currentState.validate()) {
                         _formKey.currentState.save();
-                        creator.createNewHabit(
+                        creator.createHabit(
                             _title, _description, _type, _icon);
 
                         Navigator.pop(

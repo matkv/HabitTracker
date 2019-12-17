@@ -7,22 +7,29 @@ class Habit {
   IconData icon;
   DateTime duedate;
   String type;
+  List<String> activedays;
 
-  Habit.createHabit(this.title, this.description, this.type, this.icon);
-
-  //default constructor for normal habit
+  //default constructor for normal habit  (used for temp habits for building layout)
   Habit(this.title, this.description, this.icon);
 
-  //constructor for to-do task
-  Habit.toDo(this.title, this.description, this.icon, this.duedate);
+  //constructor for "habit" habit
+  Habit.createHabit(this.title, this.description, this.type, this.icon);
 
-  Map<String, dynamic> toMap() {
+  //constructor for to-do habit
+  Habit.createToDo(this.title, this.description, this.type, this.icon, this.duedate);
+
+  //constructor for daily habit
+  Habit.createDaily(this.title, this.description, this.type, this.icon, this.activedays);
+
+  Map<String, dynamic> toMap() {  //TODO is this still used?
     return {
       'id': id,
       'title': title,
       'description': description,
+      'icon': icon,
       'duedate': duedate,
-      'type': type
+      'type': type,
+      'weekdays': activedays
     };
   }
 }
