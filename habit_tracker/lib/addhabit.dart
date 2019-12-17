@@ -61,7 +61,7 @@ class _AddHabitState extends State<AddHabit> {
                     children: <Widget>[
                       NewHabitDialog(habitCreator),
                       NewDailyDialog(habitCreator),
-                      NewToDoDialog(),
+                      NewToDoDialog(habitCreator),
                     ],
                   ),
                 ),

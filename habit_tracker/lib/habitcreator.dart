@@ -18,4 +18,8 @@ class HabitCreator {
   void createDaily(String title, String description, String type, IconData icon, List<String> weekdays){
     //TODO
   }
+
+  void createToDo(String title, String description, String type, IconData icon, DateTime duedate){
+
+  }
 }

@@ -27,7 +27,7 @@ class _NewHabitState extends State<NewHabitDialog> {
 
   String _title;
   String _description;
-  String _type = "todo";
+  String _type = "habit"; //maybe make this an enum
   IconData _icon;
 
   List<IconData> _selectedIcons = [];
@@ -132,7 +132,7 @@ class _NewHabitState extends State<NewHabitDialog> {
 
                   return null; //TODO check
                 },
-                builder: (FormFieldState<bool> state) {
+                builder: (FormFieldState<bool> state) { //TODO bool needed?
                   return SizedBox(
                     height: 50,
                     child: GridView.count(
