@@ -67,10 +67,20 @@ class _ToDoWidgetsHomeScreenState extends State<ToDoWidgetsHomeScreen> {
                     Row(
                       children: <Widget>[
                         Container(
-                          margin: EdgeInsets.all(10.0),
-                          width: 90,
-                          child: Text(habit.description),
-                        ),
+                            margin: EdgeInsets.all(10.0),
+                            width: 90,
+                            child: Column(
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    Text(habit.description),
+                                  ],
+                                ),
+                                Row(
+                                  children: <Widget>[Text(habit.duedate.toString())],
+                                )
+                              ],
+                            )),
                       ],
                     ),
                   ],

@@ -56,7 +56,7 @@ class HabitDatabase {
       $columnType TEXT NOT NULL,
       $columnIcon TEXT NOT NULL,
       $columnDescription TEXT,      
-      $columnDueDate DATETIME
+      $columnDueDate STRING
     )
     ''');
   }
@@ -114,7 +114,7 @@ class HabitDatabase {
         HabitDatabase.columnDescription: habit.description,
         HabitDatabase.columnType: habit.type,
         HabitDatabase.columnIcon: HabitIcons.getStringFromIcon(habit.icon),
-        HabitDatabase.columnDueDate: habit.duedate
+        HabitDatabase.columnDueDate: habit.duedate.toIso8601String()
       };
 
       db.insert(row);
@@ -186,11 +186,12 @@ class HabitDatabase {
       List<Map> results = value;
 
       if (results.length != 0) {
-        results.forEach((row) => listOfHabits.add(Habit.createHabit(
+        results.forEach((row) => listOfHabits.add(Habit.createToDo(
             row[columnName],
             row[columnDescription],
             row[columnType],
-            HabitIcons.IconsFromString[row[columnIcon]]))); //TEMP
+            HabitIcons.IconsFromString[row[columnIcon]],
+            DateTime.parse(row[columnDueDate])))); //TEMP
       }
     });
 

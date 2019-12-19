@@ -139,7 +139,8 @@ class _NewToDoState extends State<NewToDoDialog> {
               FormField(
                 autovalidate: false,
                 validator: (value) {
-                  if (_selectDate(context) == null) {
+                  if (_dueDate == null) {
+                    //TODO can't happen
                     return 'Please select a due date';
                   }
                   return null; //TODO check
