@@ -24,70 +24,7 @@ class _ToDoWidgetsHomeScreenState extends State<ToDoWidgetsHomeScreen> {
       });
     });
 
-//    dbHelper.getTodoHabits().then((value) {
-//      setState(() {
-//        habits = value;
-//      });
-//    });
-
     return habits;
-  }
-
-  List<Widget> createToDoPreviews(AsyncSnapshot snapshot) {
-    return snapshot.data
-        .map<Widget>((habit) => Card(
-              child: SizedBox(
-                width: 160,
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      width: 140,
-                      margin: EdgeInsets.only(top: 5.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Icon(
-                            habit.icon,
-                            color: Colors.red,
-                            size: 20.0,
-                          ),
-                          Text(
-                            habit.title,
-                            style: TextStyle(fontSize: 17),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Divider(
-                      indent: 10.0,
-                      endIndent: 10.0,
-                      thickness: 1.0,
-                      color: Colors.red,
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Container(
-                            margin: EdgeInsets.all(10.0),
-                            width: 90,
-                            child: Column(
-                              children: <Widget>[
-                                Row(
-                                  children: <Widget>[
-                                    Text(habit.description),
-                                  ],
-                                ),
-                                Row(
-                                  children: <Widget>[Text(habit.duedate.toString())],
-                                )
-                              ],
-                            )),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ))
-        .toList();
   }
 
   @override
@@ -117,5 +54,62 @@ class _ToDoWidgetsHomeScreenState extends State<ToDoWidgetsHomeScreen> {
             children: children,
           );
         });
+  }
+
+  List<Widget> createToDoPreviews(AsyncSnapshot snapshot) {
+    return snapshot.data
+        .map<Widget>((habit) => Card(
+      child: SizedBox(
+        width: 160,
+        child: Column(
+          children: <Widget>[
+            Container(
+              width: 140,
+              margin: EdgeInsets.only(top: 5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Icon(
+                    habit.icon,
+                    color: Colors.red,
+                    size: 20.0,
+                  ),
+                  Text(
+                    habit.title,
+                    style: TextStyle(fontSize: 17),
+                  ),
+                ],
+              ),
+            ),
+            Divider(
+              indent: 10.0,
+              endIndent: 10.0,
+              thickness: 1.0,
+              color: Colors.red,
+            ),
+            Row(
+              children: <Widget>[
+                Container(
+                    margin: EdgeInsets.all(10.0),
+                    width: 90,
+                    child: Column(
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Text(habit.description),
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[Text(habit.duedate.toString())],
+                        )
+                      ],
+                    )),
+              ],
+            ),
+          ],
+        ),
+      ),
+    ))
+        .toList();
   }
 }
