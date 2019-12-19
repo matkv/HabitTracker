@@ -3,9 +3,26 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_calendar/flutter_calendar.dart';
 import 'package:habit_tracker/habit.dart';
-import 'package:habit_tracker/main.dart';
+import 'package:habit_tracker/habitdatabase.dart';
+import 'package:habit_tracker/todowidgetshomescreen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  final dbHelper = HabitDatabase.instance;
+  void Function(int itemIndex) navigateTo;
+  HomeScreen(this.navigateTo);
+
+  @override
+  State<StatefulWidget> createState() {
+    return _HomeScreenState(dbHelper, navigateTo);
+  }
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final dbHelper;
+  void Function(int itemIndex) navigateTo;
+
+  _HomeScreenState(this.dbHelper, this.navigateTo);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,19 +52,20 @@ class HomeScreen extends StatelessWidget {
                         color: Colors.red,
                         size: 35,
                       ),
-                      onPressed: goToDailyScreen(),
+                      onPressed: () => goToDailyScreen(),
                     ),
                   ],
                 )),
             Column(
               children: <Widget>[
                 Container(
-                    height: 150,
-                    margin: EdgeInsets.only(left: 10.0, right: 10.0),
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: createHabitPreviews(),
-                    ))
+                  height: 150,
+                  margin: EdgeInsets.only(left: 10.0, right: 10.0),
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: createHabitPreviews(),
+                  ),
+                )
               ],
             ),
             Container(
@@ -65,19 +83,16 @@ class HomeScreen extends StatelessWidget {
                         color: Colors.red,
                         size: 35,
                       ),
-                      onPressed: goToToDoScreen(),
+                      onPressed: () => goToToDoScreen(),
                     ),
                   ],
                 )),
             Column(
               children: <Widget>[
                 Container(
-                    height: 120,
+                    height: 150,
                     margin: EdgeInsets.only(left: 10.0, right: 10.0),
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: createTodoPreviews(),
-                    ))
+                    child: ToDoWidgetsHomeScreen())
               ],
             ),
             Container(
@@ -141,7 +156,7 @@ class HomeScreen extends StatelessWidget {
                           Row(
                             children: <Widget>[
                               Text(
-                                '4 Days',
+                                'Statistics',
                                 style: TextStyle(fontSize: 30),
                               )
                             ],
@@ -157,65 +172,17 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  goToToDoScreen() {
-    //TODO figure out how to control main pagecontroller from here
+  Future goToHabitScreen() async {
+    navigateTo(1);
   }
 
-  goToDailyScreen() {
-    //TODO
+  Future goToDailyScreen() async {
+    navigateTo(2);
   }
-}
 
-List<Widget> createTodoPreviews() {
-  List<Habit> _testTodoTasks = [
-    Habit.toDo("Buy milk", "Buy milk from the store", Icons.shopping_cart,
-        DateTime.now())
-  ];
-
-  return _testTodoTasks
-      .map((habit) => Card(
-            child: SizedBox(
-              width: 160,
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    width: 140,
-                    margin: EdgeInsets.only(top: 5.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Icon(
-                          habit.icon,
-                          color: Colors.red,
-                          size: 20.0,
-                        ),
-                        Text(
-                          habit.title,
-                          style: TextStyle(fontSize: 17),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Divider(
-                    indent: 10.0,
-                    endIndent: 10.0,
-                    thickness: 1.0,
-                    color: Colors.red,
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.all(10.0),
-                        width: 90,
-                        child: Text(habit.description),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ))
-      .toList();
+  Future goToToDoScreen() async {
+    navigateTo(3);
+  }
 }
 
 List<Widget> createHabitPreviews() {
