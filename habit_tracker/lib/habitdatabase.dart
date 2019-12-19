@@ -195,6 +195,8 @@ class HabitDatabase {
       }
     });
 
+    listOfHabits.sort((a,b) => a.duedate.compareTo(b.duedate)); //sort list by duedate
+
     return listOfHabits;
   }
 }
