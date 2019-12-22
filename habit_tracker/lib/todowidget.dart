@@ -28,12 +28,15 @@ class _ToDoWidgetState extends State<ToDoWidget> {
   Widget build(BuildContext context) {
     return Card(
       child: Container(
-        height: 110,
-        child: GestureDetector(behavior: HitTestBehavior.opaque,
+        height: 200,
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
           onTap: () {
             Navigator.push(
                 context,
-              PageTransition(type: PageTransitionType.downToUp, child: HabitDetails(habit)));
+                PageTransition(
+                    type: PageTransitionType.downToUp,
+                    child: HabitDetails(habit)));
           },
           child: Flex(
             direction: Axis.horizontal,
@@ -52,12 +55,12 @@ class _ToDoWidgetState extends State<ToDoWidget> {
                 ),
               ),
               Expanded(
-                flex: 2,
+                flex: 3,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Expanded(
-                      flex: 3,
+                      flex: 2,
                       child: Row(
                         children: <Widget>[
                           Text(
@@ -69,25 +72,33 @@ class _ToDoWidgetState extends State<ToDoWidget> {
                       ),
                     ),
                     Expanded(
-                      flex: 2,
+                      flex: 3,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(
-                            habit.description,
-                            style: TextStyle(fontSize: 15),
+                          Flexible(
+                            child: Text(
+                              habit.description,
+                              style: TextStyle(fontSize: 15),
+                            ),
                           )
                         ],
                       ),
                     ),
+                    Divider(),
                     Expanded(
                       flex: 2,
                       child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
+                          Icon(
+                            Icons.date_range,
+                            color: Colors.red,
+                          ),
                           Text(
                             DateFormat.yMMMMd("en_US").format(habit.duedate),
-                            style: TextStyle(fontSize: 15),
+                            style: TextStyle(fontSize: 15, ),
                           )
                         ],
                       ),

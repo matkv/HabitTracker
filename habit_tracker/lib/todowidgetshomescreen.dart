@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:habit_tracker/habit.dart';
 import 'package:habit_tracker/habitdatabase.dart';
+import 'package:intl/intl.dart';
 
 class ToDoWidgetsHomeScreen extends StatefulWidget {
   @override
@@ -59,57 +60,80 @@ class _ToDoWidgetsHomeScreenState extends State<ToDoWidgetsHomeScreen> {
   List<Widget> createToDoPreviews(AsyncSnapshot snapshot) {
     return snapshot.data
         .map<Widget>((habit) => Card(
-      child: SizedBox(
-        width: 160,
-        child: Column(
-          children: <Widget>[
-            Container(
-              width: 140,
-              margin: EdgeInsets.only(top: 5.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                child: Container(margin: EdgeInsets.only(top: 5.0),
+              height: 200,
+              width: 250,
+              child: Flex(
+                direction: Axis.horizontal,
                 children: <Widget>[
-                  Icon(
-                    habit.icon,
-                    color: Colors.red,
-                    size: 20.0,
-                  ),
-                  Text(
-                    habit.title,
-                    style: TextStyle(fontSize: 17),
-                  ),
-                ],
-              ),
-            ),
-            Divider(
-              indent: 10.0,
-              endIndent: 10.0,
-              thickness: 1.0,
-              color: Colors.red,
-            ),
-            Row(
-              children: <Widget>[
-                Container(
-                    margin: EdgeInsets.all(10.0),
-                    width: 90,
+                  Expanded(
+                    flex: 3,
                     child: Column(
                       children: <Widget>[
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
-                            Text(habit.description),
+                            Icon(
+                              habit.icon,
+                              color: Colors.red,
+                              size: 20.0,
+                            ),
+                            Text(
+                              habit.title,
+                              style: TextStyle(fontSize: 17),
+                            ),
                           ],
                         ),
-                        Row(
-                          children: <Widget>[Text(habit.duedate.toString())],
-                        )
+                        Divider(
+                          indent: 10.0,
+                          endIndent: 10.0,
+                          thickness: 1.0,
+                          color: Colors.red,
+                        ),
+                        Expanded(
+                          flex: 3,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Flexible(
+                                child: Container(
+                                  margin: EdgeInsets.all(10.0),
+                                  child: Text(
+                                    habit.description,
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Divider(),
+                        Expanded(
+                          flex: 1,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Icon(
+                                Icons.date_range,
+                                color: Colors.red,
+                              ),
+                              Text(
+                                DateFormat.yMMMMd("en_US")
+                                    .format(habit.duedate),
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
                       ],
-                    )),
-              ],
-            ),
-          ],
-        ),
-      ),
-    ))
+                    ),
+                  ),
+                ],
+              ),
+            )))
         .toList();
   }
 }
