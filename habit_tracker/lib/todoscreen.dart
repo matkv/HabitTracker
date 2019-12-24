@@ -38,6 +38,7 @@ class _ToDoWidgetsListState extends State<ToDoWidgetList> {
     var dbHelper = HabitDatabase.instance;
     var habits;
 
+    //TODO some error happens here when switching to a different screen
     await dbHelper.getTodoHabits().then((value) {
       setState(() {
         habits = value;

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:habit_tracker/habit.dart';
 import 'package:habit_tracker/habitdetails.dart';
+import 'package:habit_tracker/popupdetails.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -30,14 +31,19 @@ class _ToDoWidgetState extends State<ToDoWidget> {
       child: Container(
         height: 200,
         child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () {
-            Navigator.push(
-                context,
-                PageTransition(
-                    type: PageTransitionType.downToUp,
-                    child: HabitDetails(habit)));
-          },
+          behavior: HitTestBehavior.translucent,
+          onTap: () async {
+                  bool shouldUpdate = await showDialog(
+                    context: context,
+                    child: PopUpDetails(context: context, habit: habit,),
+                  );
+
+                  setState(() {
+                    //TODO react to what should happen once task is marked as done
+                    // send update command to database that updates the "done" value (TODO)
+                    //shouldUpdate ? reload data somehow
+                  });
+                },
           child: Flex(
             direction: Axis.horizontal,
             children: <Widget>[
