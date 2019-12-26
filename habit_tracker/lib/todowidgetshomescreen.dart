@@ -35,32 +35,44 @@ class _ToDoWidgetsHomeScreenState extends State<ToDoWidgetsHomeScreen> {
         //future: getHabitsFromDatabase(),
         future: getHabitsFromDatabase(),
         builder: (BuildContext context, AsyncSnapshot<List<Habit>> snapshot) {
-          List<Widget> children;
+          var widgetToShow;
 
           if (snapshot.hasData) {
-            children = createToDoPreviews(snapshot);
+            if (snapshot.data.length > 0) {
+              var todopreviews = createToDoPreviews(snapshot);
+              widgetToShow = ListView(
+                scrollDirection: Axis.horizontal,
+                children: todopreviews,
+              );
+            } else {  //show placeholder text if no to-do tasks were created yet
+              widgetToShow = Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'No To-Do tasks found!',
+                  )
+                ],
+              );
+            }
           } else {
-            children = <Widget>[
-              Center(
-                child: SizedBox(
-                  child: CircularProgressIndicator(),
-                  height: 20,
-                  width: 20,
-                ),
+            //Progress inditcator while todo tasks are loaded
+            widgetToShow = Center(
+              child: SizedBox(
+                child: CircularProgressIndicator(),
+                height: 20,
+                width: 20,
               ),
-            ];
+            );
           }
 
-          return ListView(
-            scrollDirection: Axis.horizontal,
-            children: children,
-          );
+          return widgetToShow;
         });
   }
 
   List<Widget> createToDoPreviews(AsyncSnapshot snapshot) {
     return snapshot.data
-        .map<Widget>( //TODO move this to own widget class
+        .map<Widget>(
+          //TODO move this to own widget class
           (habit) => Card(
             child: Container(
               margin: EdgeInsets.only(top: 5.0),
@@ -71,7 +83,10 @@ class _ToDoWidgetsHomeScreenState extends State<ToDoWidgetsHomeScreen> {
                 onTap: () async {
                   bool shouldUpdate = await showDialog(
                     context: context,
-                    child: PopUpDetails(context: context, habit: habit,),
+                    child: PopUpDetails(
+                      context: context,
+                      habit: habit,
+                    ),
                   );
 
                   setState(() {
