@@ -21,9 +21,12 @@ class _ToDoWidgetsHomeScreenState extends State<ToDoWidgetsHomeScreen> {
     var habits;
 
     await dbHelper.getTodoHabits().then((value) {
-      setState(() {
-        habits = value;
-      });
+      //don't call this if the widget has been disposed already
+      if (this.mounted) {
+        setState(() {
+          habits = value;
+        });
+      }
     });
 
     return habits;
@@ -44,7 +47,8 @@ class _ToDoWidgetsHomeScreenState extends State<ToDoWidgetsHomeScreen> {
                 scrollDirection: Axis.horizontal,
                 children: todopreviews,
               );
-            } else {  //show placeholder text if no to-do tasks were created yet
+            } else {
+              //show placeholder text if no to-do tasks were created yet
               widgetToShow = Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
