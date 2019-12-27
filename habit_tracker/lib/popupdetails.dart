@@ -1,13 +1,73 @@
 import 'package:flutter/material.dart';
+import 'package:habit_tracker/edithabit.dart';
 import 'package:habit_tracker/habit.dart';
+import 'package:habit_tracker/scaleroute.dart';
 import 'package:intl/intl.dart';
+import 'package:page_transition/page_transition.dart';
 
-class PopUpDetails extends StatelessWidget {
-  const PopUpDetails({Key key, @required this.context, @required this.habit})
+
+bool isEditMode = false;
+
+
+class PopUpDetails extends StatefulWidget {
+  PopUpDetails({Key key, @required this.context, @required this.habit})
       : super(key: key);
 
   final BuildContext context;
   final Habit habit;
+
+  @override
+  _PopUpDetailsState createState() => _PopUpDetailsState();
+}
+
+class _PopUpDetailsState extends State<PopUpDetails> {
+  
+  setEditMode(){
+    setState(() {
+      isEditMode = true;
+    });
+  }
+
+  @override
+  void dispose() {
+    isEditMode = false;
+    super.dispose();
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        child: AnimatedContainer(
+            curve: Curves.elasticInOut,
+            duration: Duration(seconds: 5),
+            child: isEditMode
+                ? EditHabit(widget.habit)
+                : DetailsView(
+                    habit: widget.habit,
+                    setEditMode: setEditMode,
+                  )));
+  }
+}
+
+class DetailsView extends StatefulWidget {
+  DetailsView({Key key, @required this.habit, @required this.setEditMode}) : super(key: key);
+
+  final Habit habit;
+  final VoidCallback setEditMode;
+
+  @override
+  _DetailsViewState createState() => _DetailsViewState(setEditMode);
+}
+
+class _DetailsViewState extends State<DetailsView> {
+  var setEditMode;
+
+  _DetailsViewState(this.setEditMode);
+
+
+set isEditMode(bool value){
+  isEditMode = value;
+}
 
   @override
   Widget build(BuildContext context) {
@@ -27,27 +87,49 @@ class PopUpDetails extends StatelessWidget {
             Expanded(
               flex: 0,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(left: 10),
+                      child: Column(
+                        children: <Widget>[
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              widget.habit.title,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                   Column(
                     children: <Widget>[
-                      Text(
-                          habit.title,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 20),
-                        ),
-                      
+                      IconButton(
+                        icon: Icon(Icons.edit),
+                        color: Colors.red,
+                        onPressed: () {
+                          setEditMode();
+                        },
+                      ),
                     ],
-                  ),
+                  )
                 ],
               ),
             ),
-            Expanded(flex: 1,child: Divider(
-              indent: 10,
-              endIndent: 10,
-              thickness: 1.0,
-              color: Colors.red,
-            ),),
+            Expanded(
+              flex: 0,
+              child: Divider(
+                indent: 10,
+                endIndent: 10,
+                thickness: 1.0,
+                color: Colors.red,
+              ),
+            ),
             Expanded(
               flex: 5,
               child: Row(
@@ -56,7 +138,7 @@ class PopUpDetails extends StatelessWidget {
                 children: <Widget>[
                   Flexible(
                     child: Text(
-                      habit.description,
+                      widget.habit.description,
                       style: TextStyle(fontSize: 15),
                     ),
                   )
@@ -75,7 +157,7 @@ class PopUpDetails extends StatelessWidget {
                     color: Colors.red,
                   ),
                   Text(
-                    DateFormat.yMMMMd("en_US").format(habit.duedate),
+                    DateFormat.yMMMMd("en_US").format(widget.habit.duedate),
                     style: TextStyle(
                       fontSize: 15,
                     ),
