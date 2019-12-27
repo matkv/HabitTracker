@@ -38,11 +38,13 @@ class _ToDoWidgetsListState extends State<ToDoWidgetList> {
     var dbHelper = HabitDatabase.instance;
     var habits;
 
-    //TODO some error happens here when switching to a different screen
     await dbHelper.getTodoHabits().then((value) {
-      setState(() {
-        habits = value;
-      });
+      //don't call this if the widget has been disposed already
+      if (this.mounted) {
+        setState(() {
+          habits = value;
+        });
+      }
     });
 
     return habits;
@@ -54,33 +56,42 @@ class _ToDoWidgetsListState extends State<ToDoWidgetList> {
         //future: getHabitsFromDatabase(),
         future: getHabitsFromDatabase(),
         builder: (BuildContext context, AsyncSnapshot<List<Habit>> snapshot) {
-          List<Widget> children;
+          var widgetToShow;
 
           if (snapshot.hasData) {
-            children = createToDoWidgets(snapshot);
+            if (snapshot.data.length > 0) {
+              var todowidgets = createToDoWidgets(snapshot);
+              widgetToShow = ListView(
+                scrollDirection: Axis.vertical,
+                children: todowidgets,
+              );
+            } else {
+              //show placeholder text if no to-do tasks were created yet
+              widgetToShow = Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'No To-Do tasks found!',
+                  )
+                ],
+              );
+            }
           } else {
-            children = <Widget>[
-              Center(
-                child: SizedBox(
-                  child: CircularProgressIndicator(),
-                  height: 20,
-                  width: 20,
-                ),
+            //Progress inditcator while todo tasks are loaded
+            widgetToShow = Center(
+              child: SizedBox(
+                child: CircularProgressIndicator(),
+                height: 20,
+                width: 20,
               ),
-            ];
+            );
           }
 
-          return ListView(
-            scrollDirection: Axis.vertical,
-            children: children,
-          );
+          return widgetToShow;
         });
   }
 
   List<Widget> createToDoWidgets(AsyncSnapshot snapshot) {
-
-    return  snapshot.data.map<Widget>((habit) => ToDoWidget(habit)).toList();
-
-
+    return snapshot.data.map<Widget>((habit) => ToDoWidget(habit)).toList();
   }
 }
