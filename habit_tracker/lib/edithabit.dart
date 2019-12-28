@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habit_tracker/habit.dart';
+import 'package:habit_tracker/habitcreator.dart';
 import 'package:habit_tracker/popupdetails.dart';
 import 'package:intl/intl.dart';
 
@@ -170,8 +172,12 @@ class _EditTodoState extends State<EditTodo> {
                 children: <Widget>[
                   RaisedButton(
                     child: Text('Delete Habit'),
-                    onPressed: () {
-                      //TODO add delete function and then push out with navigator
+                    onPressed: () async {
+                      Future<bool> successful = HabitCreator().deleteHabit(habit);
+                      if (await successful) {
+                        Fluttertoast.showToast(msg: "Habit deleted succesfully");
+                      }
+                      Navigator.pop(context);
                     },
                   )
                 ],

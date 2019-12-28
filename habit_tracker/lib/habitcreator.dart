@@ -29,4 +29,16 @@ class HabitCreator {
     Fluttertoast.showToast(msg: "Habit created succesfully");
 
   }
+
+  Future<bool> deleteHabit(Habit habit) async {
+
+    var test = await dbHelper.queryAllRows();
+    
+  int numberofaffectedrows = await dbHelper.delete(habit.id);
+
+    if (numberofaffectedrows > 0) {
+      return true;
+    }    
+    return false;    
+  }
 }
