@@ -17,6 +17,7 @@ class HabitTracker extends StatelessWidget {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
     return MaterialApp(
+      title: 'Habit Tracker',
       theme: ThemeData(primarySwatch: Colors.red),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
