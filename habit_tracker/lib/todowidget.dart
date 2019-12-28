@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:habit_tracker/habit.dart';
-import 'package:habit_tracker/habitdetails.dart';
 import 'package:habit_tracker/popupdetails.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
