@@ -18,6 +18,10 @@ class Habit {
   //constructor for to-do habit
   Habit.createToDo(this.title, this.description, this.type, this.icon, this.duedate);
 
+  //TODO add this for the other types too
+  //constructor for to-do habit with id - used when loading from habitdatabase
+  Habit.createToDoWithID(this.id, this.title, this.description, this.type, this.icon, this.duedate);
+
   //constructor for daily habit
   Habit.createDaily(this.title, this.description, this.type, this.icon, this.activedays);
 

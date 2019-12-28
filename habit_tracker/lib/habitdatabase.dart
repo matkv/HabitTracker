@@ -130,6 +130,8 @@ class HabitDatabase {
     Database db = await instance.database;
     List<Habit> listOfHabits = [];
 
+    //TODO load id + new constructor when creating the babit
+
     await db
         .rawQuery(
             "SELECT $columnName, $columnDescription, $columnType, $columnIcon FROM habits WHERE $columnType = 'habit'")
@@ -152,6 +154,8 @@ class HabitDatabase {
     List<Habit> listOfHabits = [];
 
     //TODO WEEKDAYS ARE MISSING HERE
+
+    //TODO load id + new constructor when creating the babit
 
     await db
         .rawQuery(
@@ -181,12 +185,13 @@ class HabitDatabase {
 
     await db
         .rawQuery(
-            "SELECT $columnName, $columnDescription, $columnType, $columnIcon, $columnDueDate FROM habits WHERE $columnType = 'todo'")
+            "SELECT $columnId, $columnName, $columnDescription, $columnType, $columnIcon, $columnDueDate FROM habits WHERE $columnType = 'todo'")
         .then((value) {
       List<Map> results = value;
 
       if (results.length != 0) {
-        results.forEach((row) => listOfHabits.add(Habit.createToDo(
+        results.forEach((row) => listOfHabits.add(Habit.createToDoWithID(
+            row[columnId],
             row[columnName],
             row[columnDescription],
             row[columnType],
