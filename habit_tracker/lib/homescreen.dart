@@ -90,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Column(
               children: <Widget>[
                 Container(
-                    height: 150,
+                    height: 180,
                     margin: EdgeInsets.only(left: 10.0, right: 10.0),
                     child: ToDoWidgetsHomeScreen())
               ],

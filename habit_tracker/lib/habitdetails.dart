@@ -27,42 +27,42 @@ class _HabitDetailsState extends State<HabitDetails> {
         iconTheme: IconThemeData(color: Colors.red),
         actions: <Widget>[Icon(Icons.edit)],
       ),
-      body: ListView(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Icon(
-                        habit.icon,
-                        size: 25,
-                      )
-                    ],
-                  ),
-                ],
-              ),
-              Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Text(habit.title, style: TextStyle(fontSize: 25))
-                    ],
-                  ),
-                ],
-              )
-            ],
-          ),
-          Row(
-            children: <Widget>[Text(habit.description)],
-          ),
-          Row(
-            children: <Widget>[
-
-            ],
-          ),
-        ],
+      body: Container(margin: EdgeInsets.all(10),
+        child: ListView(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          habit.icon,
+                          size: 45,
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+                Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Text(habit.title, style: TextStyle(fontSize: 25))
+                      ],
+                    ),
+                  ],
+                )
+              ],
+            ),
+            Row(
+              children: <Widget>[Text(habit.description)],
+            ),
+            Row(
+              children: <Widget>[],
+            ),
+          ],
+        ),
       ),
     );
   }
