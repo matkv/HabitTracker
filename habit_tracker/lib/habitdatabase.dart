@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:habit_tracker/helperfunctions.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:io';
@@ -20,6 +21,7 @@ class HabitDatabase {
   static final columnType = 'type';
   static final columnDueDate = 'duedate';
   static final columnIcon = 'icon';
+  static final columnIsDone = 'isdone'; //used for to-do habits
 
   // make this a singleton class
   HabitDatabase._constructor();
@@ -56,7 +58,8 @@ class HabitDatabase {
       $columnType TEXT NOT NULL,
       $columnIcon TEXT NOT NULL,
       $columnDescription TEXT,      
-      $columnDueDate STRING
+      $columnDueDate STRING,
+      $columnIsDone INTEGER
     )
     ''');
   }
@@ -114,7 +117,8 @@ class HabitDatabase {
         HabitDatabase.columnDescription: habit.description,
         HabitDatabase.columnType: habit.type,
         HabitDatabase.columnIcon: HabitIcons.getStringFromIcon(habit.icon),
-        HabitDatabase.columnDueDate: habit.duedate.toIso8601String()
+        HabitDatabase.columnDueDate: habit.duedate.toIso8601String(),
+        HabitDatabase.columnIsDone: HelperFunctions.boolToInt(habit.isdone),
       };
 
       db.insert(row);
@@ -130,18 +134,20 @@ class HabitDatabase {
     try {
       HabitDatabase db = instance;
 
+      //TODO weekdays are missing
+
       Map<String, dynamic> row = {
-        HabitDatabase.columnId: habit.id,        
+        HabitDatabase.columnId: habit.id,
         HabitDatabase.columnName: habit.title,
         HabitDatabase.columnDescription: habit.description,
         HabitDatabase.columnType: habit.type,
         HabitDatabase.columnIcon: HabitIcons.getStringFromIcon(habit.icon),
-        HabitDatabase.columnDueDate: habit.duedate.toIso8601String()
+        HabitDatabase.columnDueDate: habit.duedate.toIso8601String(),
+        HabitDatabase.columnIsDone: HelperFunctions.boolToInt(habit.isdone),
       };
 
       db.update(row);
       return true;
-
     } on Exception catch (e) {
       var errormessage = e.toString();
       Fluttertoast.showToast(msg: "Error: $errormessage");
@@ -202,11 +208,13 @@ class HabitDatabase {
   Future<List<Habit>> getTodoHabits() async {
     Database db = await instance.database;
 
+    var test = await queryAllRows();
+
     List<Habit> listOfHabits = [];
 
     await db
         .rawQuery(
-            "SELECT $columnId, $columnName, $columnDescription, $columnType, $columnIcon, $columnDueDate FROM habits WHERE $columnType = 'todo'")
+            "SELECT $columnId, $columnName, $columnDescription, $columnType, $columnIcon, $columnDueDate, $columnIsDone FROM habits WHERE $columnType = 'todo'")
         .then((value) {
       List<Map> results = value;
 
@@ -217,11 +225,13 @@ class HabitDatabase {
             row[columnDescription],
             row[columnType],
             HabitIcons.IconsFromString[row[columnIcon]],
-            DateTime.parse(row[columnDueDate])))); //TEMP
+            DateTime.parse(row[columnDueDate]),
+            HelperFunctions.intToBool(row[columnIsDone])))); //TEMP
       }
     });
 
-    listOfHabits.sort((a,b) => a.duedate.compareTo(b.duedate)); //sort list by duedate
+    listOfHabits
+        .sort((a, b) => a.duedate.compareTo(b.duedate)); //sort list by duedate
 
     return listOfHabits;
   }

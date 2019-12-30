@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/edithabit.dart';
 import 'package:habit_tracker/habit.dart';
+import 'package:habit_tracker/habitcreator.dart';
 import 'package:habit_tracker/scaleroute.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 
-
 bool isEditMode = false;
-
 
 class PopUpDetails extends StatefulWidget {
   PopUpDetails({Key key, @required this.context, @required this.habit})
@@ -21,8 +20,7 @@ class PopUpDetails extends StatefulWidget {
 }
 
 class _PopUpDetailsState extends State<PopUpDetails> {
-  
-  setEditMode(){
+  setEditMode() {
     setState(() {
       isEditMode = true;
     });
@@ -33,7 +31,7 @@ class _PopUpDetailsState extends State<PopUpDetails> {
     isEditMode = false;
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -50,25 +48,56 @@ class _PopUpDetailsState extends State<PopUpDetails> {
 }
 
 class DetailsView extends StatefulWidget {
-  DetailsView({Key key, @required this.habit, @required this.setEditMode}) : super(key: key);
+  DetailsView({Key key, @required this.habit, @required this.setEditMode})
+      : super(key: key);
 
   final Habit habit;
   final VoidCallback setEditMode;
 
   @override
-  _DetailsViewState createState() => _DetailsViewState(setEditMode);
+  _DetailsViewState createState() => _DetailsViewState(setEditMode, habit);
 }
 
 class _DetailsViewState extends State<DetailsView> {
   var setEditMode;
+  Habit habit;
 
-  _DetailsViewState(this.setEditMode);
+  _DetailsViewState(this.setEditMode, this.habit);
 
+  set isEditMode(bool value) {
+    isEditMode = value;
+  }
 
-set isEditMode(bool value){
-  isEditMode = value;
+  @override
+  Widget build(BuildContext context) {
+    switch (habit.type) {
+      case 'todo':
+        return DetailsViewTodo(
+          widget: widget,
+          setEditMode: setEditMode,
+        );
+        break;
+      default:
+        return Text('Tried building details view which has not been specified');
+    }
+  }
 }
 
+class DetailsViewTodo extends StatefulWidget {
+  const DetailsViewTodo({
+    Key key,
+    @required this.widget,
+    @required this.setEditMode,
+  }) : super(key: key);
+
+  final DetailsView widget;
+  final VoidCallback setEditMode;
+
+  @override
+  _DetailsViewTodoState createState() => _DetailsViewTodoState();
+}
+
+class _DetailsViewTodoState extends State<DetailsViewTodo> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -96,7 +125,7 @@ set isEditMode(bool value){
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              widget.habit.title,
+                              widget.widget.habit.title,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20,
@@ -113,7 +142,7 @@ set isEditMode(bool value){
                         icon: Icon(Icons.edit),
                         color: Colors.red,
                         onPressed: () {
-                          setEditMode();
+                          widget.setEditMode();
                         },
                       ),
                     ],
@@ -138,7 +167,7 @@ set isEditMode(bool value){
                 children: <Widget>[
                   Flexible(
                     child: Text(
-                      widget.habit.description,
+                      widget.widget.habit.description,
                       style: TextStyle(fontSize: 15),
                     ),
                   )
@@ -157,7 +186,7 @@ set isEditMode(bool value){
                     color: Colors.red,
                   ),
                   Text(
-                    DateFormat.yMMMMd("en_US").format(widget.habit.duedate),
+                    DateFormat.yMMMMd("en_US").format(widget.widget.habit.duedate),
                     style: TextStyle(
                       fontSize: 15,
                     ),
@@ -170,9 +199,14 @@ set isEditMode(bool value){
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: FloatingActionButton(
-                  child: Icon(Icons.check),
-                  onPressed: () => Navigator.pop(context, true),
-                ),
+                    child: Icon(Icons.check),
+                    onPressed: () {     
+                      setState(() {
+                        widget.widget.habit.isdone = true;
+                        HabitCreator().updateHabit(widget.widget.habit);
+                      });                 
+                      Navigator.pop(context, true);
+                    }),
               ),
             ),
           ],

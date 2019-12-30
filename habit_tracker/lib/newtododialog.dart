@@ -218,7 +218,7 @@ class _NewToDoState extends State<NewToDoDialog> {
                         _formKey.currentState.save();
 
                         creator.createToDo(
-                            _title, _description, _type, _icon, _dueDate);
+                            _title, _description, _type, _icon, _dueDate, false);
 
                         Navigator.pop(
                           context,

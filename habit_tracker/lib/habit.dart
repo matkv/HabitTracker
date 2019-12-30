@@ -8,6 +8,7 @@ class Habit {
   DateTime duedate;
   String type;
   List<String> activedays;
+  bool isdone;
 
   //default constructor for normal habit  (used for temp habits for building layout)
   Habit(this.title, this.description, this.icon);
@@ -21,11 +22,11 @@ class Habit {
 
   //constructor for to-do habit
   Habit.createToDo(
-      this.title, this.description, this.type, this.icon, this.duedate);
+      this.title, this.description, this.type, this.icon, this.duedate, this.isdone);
 
   //constructor for to-do habit with id - used when loading from habitdatabase
   Habit.createToDoWithID(this.id, this.title, this.description, this.type,
-      this.icon, this.duedate);
+      this.icon, this.duedate, this.isdone);
 
   //constructor for daily habit
   Habit.createDaily(

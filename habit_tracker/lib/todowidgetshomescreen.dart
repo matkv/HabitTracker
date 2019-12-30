@@ -160,7 +160,8 @@ class _ToDoWidgetsHomeScreenState extends State<ToDoWidgetsHomeScreen> {
                                   style: TextStyle(
                                     fontSize: 15,
                                   ),
-                                )
+                                ),
+                                Icon(habit.isdone ? Icons.done : Icons.error)
                               ],
                             ),
                           ),

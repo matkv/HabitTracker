@@ -22,8 +22,8 @@ class HabitCreator {
     Fluttertoast.showToast(msg: "Habit created succesfully");
   }
 
-  Future<void> createToDo(String title, String description, String type, IconData icon, DateTime duedate){
-    Habit currentHabit = new Habit.createToDo(title, description, type, icon, duedate);
+  Future<void> createToDo(String title, String description, String type, IconData icon, DateTime duedate, bool isDone){
+    Habit currentHabit = new Habit.createToDo(title, description, type, icon, duedate, isDone);
     dbHelper.insertHabit(currentHabit);
 
     Fluttertoast.showToast(msg: "Habit created succesfully");
