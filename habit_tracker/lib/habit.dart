@@ -15,17 +15,28 @@ class Habit {
   //constructor for "habit" habit
   Habit.createHabit(this.title, this.description, this.type, this.icon);
 
-  //constructor for to-do habit
-  Habit.createToDo(this.title, this.description, this.type, this.icon, this.duedate);
+  //constructor for habit with id - used when loading from habitdatabse
+  Habit.createHabitWithID(
+      this.id, this.title, this.description, this.type, this.icon);
 
-  //TODO add this for the other types too
+  //constructor for to-do habit
+  Habit.createToDo(
+      this.title, this.description, this.type, this.icon, this.duedate);
+
   //constructor for to-do habit with id - used when loading from habitdatabase
-  Habit.createToDoWithID(this.id, this.title, this.description, this.type, this.icon, this.duedate);
+  Habit.createToDoWithID(this.id, this.title, this.description, this.type,
+      this.icon, this.duedate);
 
   //constructor for daily habit
-  Habit.createDaily(this.title, this.description, this.type, this.icon, this.activedays);
+  Habit.createDaily(
+      this.title, this.description, this.type, this.icon, this.activedays);
 
-  Map<String, dynamic> toMap() {  //TODO is this still used?
+  //constructor for daily habit with id - used when loading from habitdatabse
+  Habit.createDailyWithID(this.id, this.title, this.description, this.type,
+      this.icon, this.activedays);
+
+  Map<String, dynamic> toMap() {
+    //TODO is this still used?
     return {
       'id': id,
       'title': title,

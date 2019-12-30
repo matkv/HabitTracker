@@ -130,16 +130,15 @@ class HabitDatabase {
     Database db = await instance.database;
     List<Habit> listOfHabits = [];
 
-    //TODO load id + new constructor when creating the babit
-
     await db
         .rawQuery(
-            "SELECT $columnName, $columnDescription, $columnType, $columnIcon FROM habits WHERE $columnType = 'habit'")
+            "SELECT $columnId, $columnName, $columnDescription, $columnType, $columnIcon FROM habits WHERE $columnType = 'habit'")
         .then((value) {
       List<Map> results = value;
 
       if (results.length != 0) {
-        results.forEach((row) => listOfHabits.add(Habit.createHabit(
+        results.forEach((row) => listOfHabits.add(Habit.createHabitWithID(
+            row[columnId],
             row[columnName],
             row[columnDescription],
             row[columnType],
@@ -155,18 +154,17 @@ class HabitDatabase {
 
     //TODO WEEKDAYS ARE MISSING HERE
 
-    //TODO load id + new constructor when creating the babit
-
     await db
         .rawQuery(
-            "SELECT $columnName, $columnDescription, $columnType, $columnIcon FROM habits WHERE $columnType = 'daily'")
+            "SELECT $columnId, $columnName, $columnDescription, $columnType, $columnIcon FROM habits WHERE $columnType = 'daily'")
         .then((value) {
       List<Map> results = value;
 
       List<String> tempWeekDays = ['Monday', 'Wednesday', 'Saturday'];
 
       if (results.length != 0) {
-        results.forEach((row) => listOfHabits.add((Habit.createDaily(
+        results.forEach((row) => listOfHabits.add((Habit.createDailyWithID(
+            row[columnId],
             row[columnName],
             row[columnDescription],
             row[columnType],
