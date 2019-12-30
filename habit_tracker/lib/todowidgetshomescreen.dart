@@ -143,6 +143,17 @@ class _ToDoWidgetsHomeScreenState extends State<ToDoWidgetsHomeScreen> {
                               ],
                             ),
                           ),
+                          Expanded(
+                            flex: 1,
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Icon(
+                                habit.isdone ? Icons.done : Icons.clear,
+                                color: habit.isdone ? Colors.green : Colors.red,
+                                size: 35,
+                              ),
+                            ),
+                          ),
                           Divider(),
                           Expanded(
                             flex: 1,
@@ -161,7 +172,6 @@ class _ToDoWidgetsHomeScreenState extends State<ToDoWidgetsHomeScreen> {
                                     fontSize: 15,
                                   ),
                                 ),
-                                Icon(habit.isdone ? Icons.done : Icons.error)
                               ],
                             ),
                           ),

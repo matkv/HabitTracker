@@ -198,11 +198,12 @@ class _DetailsViewTodoState extends State<DetailsViewTodo> {
               flex: 2,
               child: Align(
                 alignment: Alignment.bottomCenter,
-                child: FloatingActionButton(
-                    child: Icon(Icons.check),
+                child:    
+                 FloatingActionButton(
+                    child: Icon(widget.widget.habit.isdone ? Icons.clear : Icons.check),
                     onPressed: () {     
                       setState(() {
-                        widget.widget.habit.isdone = true;
+                        widget.widget.habit.isdone = !widget.widget.habit.isdone; //mark as done if not done, or not done if done
                         HabitCreator().updateHabit(widget.widget.habit);
                       });                 
                       Navigator.pop(context, true);
