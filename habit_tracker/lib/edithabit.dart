@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habit_tracker/habit.dart';
 import 'package:habit_tracker/habitcreator.dart';
+import 'package:habit_tracker/habiticons.dart';
+import 'package:habit_tracker/helperwidgets.dart';
 import 'package:habit_tracker/popupdetails.dart';
 import 'package:intl/intl.dart';
 
@@ -44,7 +46,10 @@ class _EditTodoState extends State<EditTodo> {
 
   String _title;
   String _description;
-   DateTime _dueDate;
+  DateTime _dueDate;
+  IconData _icon;
+
+  List<IconData> _selectedIcons = [];
 
   _EditTodoState(this.habit);
 
@@ -58,6 +63,16 @@ class _EditTodoState extends State<EditTodo> {
       setState(() {
         _dueDate = picked;
       });
+  }
+
+  @override
+  void initState() {
+    //set initial values (makes saving possible even if nothing changed)
+    _title = habit.title;
+    _description = habit.description;
+    _dueDate = habit.duedate;
+    _icon = habit.icon;
+    super.initState();
   }
 
   @override
@@ -138,6 +153,42 @@ class _EditTodoState extends State<EditTodo> {
               FormField(
                 autovalidate: false,
                 validator: (value) {
+                  if (_selectedIcons.length == 0) {
+                    //TODO show some kind of warning
+
+                    return 'Please select an icon';
+                  }
+
+                  return null; //TODO check
+                },
+                builder: (FormFieldState<bool> state) {
+                  //TODO bool needed?
+                  return SizedBox(
+                    height: 50,
+                    child: GridView.count(
+                      crossAxisCount: 7,
+                      crossAxisSpacing: 10.0,
+                      children: HabitIcons.icons.map((iconData) {
+                        return GestureDetector(
+                          onTap: () {
+                            _selectedIcons.clear();
+
+                            setState(() {
+                              _selectedIcons.add(iconData);
+                              _icon = iconData;
+                            });
+                          },
+                          child: SelectableGridViewItem(
+                              iconData, _selectedIcons.contains(iconData)),
+                        );
+                      }).toList(),
+                    ),
+                  );
+                },
+              ),
+              FormField(
+                autovalidate: false,
+                validator: (value) {
                   if (_dueDate == null) {
                     //TODO can't happen
                     return 'Please select a due date';
@@ -162,20 +213,22 @@ class _EditTodoState extends State<EditTodo> {
                 }, //TODO bool needed?
               ),
               Divider(
-                    indent: 10.0,
-                    endIndent: 10.0,
-                    thickness: 1.0,
-                    color: Colors.red,
-                  ),
+                indent: 10.0,
+                endIndent: 10.0,
+                thickness: 1.0,
+                color: Colors.red,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   RaisedButton(
                     child: Text('Delete Habit'),
                     onPressed: () async {
-                      Future<bool> successful = HabitCreator().deleteHabit(habit);
+                      Future<bool> successful =
+                          HabitCreator().deleteHabit(habit);
                       if (await successful) {
-                        Fluttertoast.showToast(msg: "Habit deleted succesfully");
+                        Fluttertoast.showToast(
+                            msg: "Habit deleted succesfully");
                       }
                       Navigator.pop(context);
                     },
@@ -187,9 +240,26 @@ class _EditTodoState extends State<EditTodo> {
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: FloatingActionButton(
-                    child: Icon(Icons.check),
-                    onPressed: () => Navigator.pop(context, true),
-                  ),
+                      child: Icon(Icons.save),
+                      onPressed: () async {
+                        if (_formKey.currentState.validate()) {
+                          _formKey.currentState.save();
+
+                          //update values
+                          habit.title = _title;
+                          habit.description = _description;
+                          habit.duedate = _dueDate;
+                          habit.icon = _icon;
+
+                          Future<bool> successful =
+                              HabitCreator().updateHabit(habit);
+                          if (await successful) {
+                            Fluttertoast.showToast(
+                                msg: 'Habit updated succesfully');
+                          }
+                          Navigator.pop(context, true);
+                        }
+                      }),
                 ),
               ),
             ],
