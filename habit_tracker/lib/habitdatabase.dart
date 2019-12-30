@@ -91,7 +91,7 @@ class HabitDatabase {
   Future<int> update(Map<String, dynamic> row) async {
     Database db = await instance.database;
     int id = row[columnId];
-    return await db.update(table, row, where: 'columnId = ?', whereArgs: [id]);
+    return await db.update(table, row, where: '$columnId = ?', whereArgs: [id]);
   }
 
 //Deletes the row specified by the id. The number of affected rows is returned
@@ -119,6 +119,29 @@ class HabitDatabase {
 
       db.insert(row);
       return true;
+    } on Exception catch (e) {
+      var errormessage = e.toString();
+      Fluttertoast.showToast(msg: "Error: $errormessage");
+      return false;
+    }
+  }
+
+  Future<bool> updateHabit(Habit habit) async {
+    try {
+      HabitDatabase db = instance;
+
+      Map<String, dynamic> row = {
+        HabitDatabase.columnId: habit.id,        
+        HabitDatabase.columnName: habit.title,
+        HabitDatabase.columnDescription: habit.description,
+        HabitDatabase.columnType: habit.type,
+        HabitDatabase.columnIcon: HabitIcons.getStringFromIcon(habit.icon),
+        HabitDatabase.columnDueDate: habit.duedate.toIso8601String()
+      };
+
+      db.update(row);
+      return true;
+
     } on Exception catch (e) {
       var errormessage = e.toString();
       Fluttertoast.showToast(msg: "Error: $errormessage");

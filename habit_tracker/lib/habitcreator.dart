@@ -31,8 +31,6 @@ class HabitCreator {
   }
 
   Future<bool> deleteHabit(Habit habit) async {
-
-    var test = await dbHelper.queryAllRows();
     
   int numberofaffectedrows = await dbHelper.delete(habit.id);
 
@@ -40,5 +38,12 @@ class HabitCreator {
       return true;
     }    
     return false;    
+  }
+
+  Future<bool> updateHabit(Habit habit) async {
+
+    bool successful = await dbHelper.updateHabit(habit);
+
+    return successful;
   }
 }
