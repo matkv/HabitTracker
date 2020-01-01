@@ -169,6 +169,12 @@ class _EditTodoState extends State<EditTodo> {
                       crossAxisCount: 7,
                       crossAxisSpacing: 10.0,
                       children: HabitIcons.icons.map((iconData) {
+                        
+                        //select current icon by default
+                        if (_selectedIcons.length == 0) {
+                          _selectedIcons.add(habit.icon);
+                        }
+                        
                         return GestureDetector(
                           onTap: () {
                             _selectedIcons.clear();
