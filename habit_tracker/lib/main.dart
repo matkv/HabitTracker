@@ -16,6 +16,16 @@ class HabitTracker extends StatelessWidget {
     //disable screen rotation
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+
+        // navigation bar color
+        systemNavigationBarColor: Colors.white,
+        systemNavigationBarIconBrightness: Brightness.dark,
+
+        // status bar color
+        statusBarColor: Colors.white,
+        statusBarIconBrightness: Brightness.dark));
+
     return MaterialApp(
       title: 'Habit Tracker',
       theme: ThemeData(primarySwatch: Colors.red),
