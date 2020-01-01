@@ -8,6 +8,7 @@ class Habit {
   DateTime duedate;
   String type;
   List<String> activedays;
+  bool isdone;
 
   //default constructor for normal habit  (used for temp habits for building layout)
   Habit(this.title, this.description, this.icon);
@@ -15,13 +16,28 @@ class Habit {
   //constructor for "habit" habit
   Habit.createHabit(this.title, this.description, this.type, this.icon);
 
+  //constructor for habit with id - used when loading from habitdatabse
+  Habit.createHabitWithID(
+      this.id, this.title, this.description, this.type, this.icon);
+
   //constructor for to-do habit
-  Habit.createToDo(this.title, this.description, this.type, this.icon, this.duedate);
+  Habit.createToDo(
+      this.title, this.description, this.type, this.icon, this.duedate, this.isdone);
+
+  //constructor for to-do habit with id - used when loading from habitdatabase
+  Habit.createToDoWithID(this.id, this.title, this.description, this.type,
+      this.icon, this.duedate, this.isdone);
 
   //constructor for daily habit
-  Habit.createDaily(this.title, this.description, this.type, this.icon, this.activedays);
+  Habit.createDaily(
+      this.title, this.description, this.type, this.icon, this.activedays);
 
-  Map<String, dynamic> toMap() {  //TODO is this still used?
+  //constructor for daily habit with id - used when loading from habitdatabse
+  Habit.createDailyWithID(this.id, this.title, this.description, this.type,
+      this.icon, this.activedays);
+
+  Map<String, dynamic> toMap() {
+    //TODO is this still used?
     return {
       'id': id,
       'title': title,

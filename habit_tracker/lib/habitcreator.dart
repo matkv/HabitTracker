@@ -22,11 +22,28 @@ class HabitCreator {
     Fluttertoast.showToast(msg: "Habit created succesfully");
   }
 
-  Future<void> createToDo(String title, String description, String type, IconData icon, DateTime duedate){
-    Habit currentHabit = new Habit.createToDo(title, description, type, icon, duedate);
+  Future<void> createToDo(String title, String description, String type, IconData icon, DateTime duedate, bool isDone){
+    Habit currentHabit = new Habit.createToDo(title, description, type, icon, duedate, isDone);
     dbHelper.insertHabit(currentHabit);
 
     Fluttertoast.showToast(msg: "Habit created succesfully");
 
+  }
+
+  Future<bool> deleteHabit(Habit habit) async {
+    
+  int numberofaffectedrows = await dbHelper.delete(habit.id);
+
+    if (numberofaffectedrows > 0) {
+      return true;
+    }    
+    return false;    
+  }
+
+  Future<bool> updateHabit(Habit habit) async {
+
+    bool successful = await dbHelper.updateHabit(habit);
+
+    return successful;
   }
 }
