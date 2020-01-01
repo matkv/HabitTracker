@@ -256,13 +256,13 @@ class HabitDatabase {
 
       if (results.length != 0) {
         results.forEach((row) => {  //this should always just be 1 row (check)
-              currentHabitWeekdays.add((row[columnMonday] == 1) ? true : false),
-              currentHabitWeekdays.add((row[columnTuesday] == 1) ? true : false),
-              currentHabitWeekdays.add((row[columnWednesday] == 1) ? true : false),
-              currentHabitWeekdays.add((row[columnThursday] == 1) ? true : false),
-              currentHabitWeekdays.add((row[columnFriday] == 1) ? true : false),
-              currentHabitWeekdays.add((row[columnSaturday] == 1) ? true : false),
-              currentHabitWeekdays.add((row[columnSunday] == 1) ? true : false),
+              currentHabitWeekdays.add(HelperFunctions.intToBool(row[columnMonday])),
+              currentHabitWeekdays.add(HelperFunctions.intToBool(row[columnTuesday])),
+              currentHabitWeekdays.add(HelperFunctions.intToBool(row[columnWednesday])),
+              currentHabitWeekdays.add(HelperFunctions.intToBool(row[columnThursday])),
+              currentHabitWeekdays.add(HelperFunctions.intToBool(row[columnFriday])),
+              currentHabitWeekdays.add(HelperFunctions.intToBool(row[columnSaturday])),
+              currentHabitWeekdays.add(HelperFunctions.intToBool(row[columnSunday])),
             });
       }
     });
@@ -291,7 +291,7 @@ class HabitDatabase {
                   row[columnName],
                   row[columnDescription],
                   row[columnType],
-                  HabitIcons.IconsFromString[columnIcon],
+                  HabitIcons.IconsFromString[row[columnIcon]],
                   weekDays)))
             });
       }
