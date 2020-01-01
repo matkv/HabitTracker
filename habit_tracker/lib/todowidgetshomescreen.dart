@@ -16,6 +16,9 @@ class ToDoWidgetsHomeScreen extends StatefulWidget {
 //https://api.flutter.dev/flutter/widgets/FutureBuilder-class.html
 
 class _ToDoWidgetsHomeScreenState extends State<ToDoWidgetsHomeScreen> {
+
+  Future<List<Habit>> _future;
+
   Future<List<Habit>> getHabitsFromDatabase() async {
     var dbHelper = HabitDatabase.instance;
     var habits;
@@ -33,10 +36,16 @@ class _ToDoWidgetsHomeScreenState extends State<ToDoWidgetsHomeScreen> {
   }
 
   @override
+  void initState() {
+    _future = getHabitsFromDatabase();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder(
         //future: getHabitsFromDatabase(),
-        future: getHabitsFromDatabase(),
+        future: _future,
         builder: (BuildContext context, AsyncSnapshot<List<Habit>> snapshot) {
           var widgetToShow;
 

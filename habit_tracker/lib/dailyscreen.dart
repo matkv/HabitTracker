@@ -48,14 +48,15 @@ class _DailyWidgetsListState extends State<DailyWidgetsList> {
 
   @override
   void initState() {
-    super.initState();
     _future = getHabitsFromDatabase();
+    super.initState();
   }
+
+  
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        //future: getHabitsFromDatabase(),
         future: _future,
         builder: (BuildContext context, AsyncSnapshot<List<Habit>> snapshot) {
           var widgetToShow;

@@ -33,6 +33,8 @@ class ToDoWidgetList extends StatefulWidget {
 }
 
 class _ToDoWidgetsListState extends State<ToDoWidgetList> {
+Future<List<Habit>> _future;
+
   //TODO move this to separate class? used in todowidgetshomescreen too
   Future<List<Habit>> getHabitsFromDatabase() async {
     var dbHelper = HabitDatabase.instance;
@@ -51,10 +53,16 @@ class _ToDoWidgetsListState extends State<ToDoWidgetList> {
   }
 
   @override
+  void initState() {
+    _future = getHabitsFromDatabase();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder(
         //future: getHabitsFromDatabase(),
-        future: getHabitsFromDatabase(),
+        future: _future,
         builder: (BuildContext context, AsyncSnapshot<List<Habit>> snapshot) {
           var widgetToShow;
 
