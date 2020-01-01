@@ -214,9 +214,10 @@ class _NewDailyState extends State<NewDailyDialog> {
                       label: Text('Create Daily'),
                       icon: Icon(Icons.save),
                       onPressed: () async {
-                        if (_formKey.currentState.validate()){
+                        if (_formKey.currentState.validate()) {
                           _formKey.currentState.save();
-                          creator.createDaily(_title, _description, _type, _icon, _selectedDays);
+                          creator.createDaily(_title, _description, _type,
+                              _icon, WeekDays.getActivedays(_selectedDays));                              
 
                           Navigator.pop(
                               context,
@@ -246,4 +247,24 @@ class WeekDays {
     'Saturday',
     'Sunday'
   ];
+
+  static List<bool> getActivedays(List<String> currentdays) {
+    List<bool> activeDays = List<bool>();
+
+    int index;
+
+    //fill list
+    for (var i = 0; i <= 6; i++) {
+      activeDays.add(false);
+    }   
+
+    //if the day is in currentdays, add its index in days to activedays bool list
+    days.forEach((String element) => {
+          if (currentdays.contains(element))
+            {index = days.indexOf(element), activeDays[index] = true}
+           
+        });
+
+    return activeDays;
+  }
 }

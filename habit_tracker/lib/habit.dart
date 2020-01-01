@@ -7,7 +7,7 @@ class Habit {
   IconData icon;
   DateTime duedate;
   String type;
-  List<String> activedays;
+  List<bool> activedays;
   bool isdone;
 
   //default constructor for normal habit  (used for temp habits for building layout)
@@ -33,8 +33,11 @@ class Habit {
       this.title, this.description, this.type, this.icon, this.activedays);
 
   //constructor for daily habit with id - used when loading from habitdatabse
+
   Habit.createDailyWithID(this.id, this.title, this.description, this.type,
       this.icon, this.activedays);
+
+
 
   Map<String, dynamic> toMap() {
     //TODO is this still used?

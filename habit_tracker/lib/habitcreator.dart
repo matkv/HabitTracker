@@ -15,9 +15,15 @@ class HabitCreator {
     Fluttertoast.showToast(msg: "Habit created succesfully"); //TODO implement actual try-catch
   }
 
-  void createDaily(String title, String description, String type, IconData icon, List<String> activedays){
+  Future<void> createDaily (String title, String description, String type, IconData icon, List<bool> activedays) async {
     Habit currentHabit = new Habit.createDaily(title, description, type, icon, activedays);
     dbHelper.insertHabit(currentHabit);
+
+    //get id that has been created when inserting into database
+    int id = await dbHelper.getIdOfNewestDaily();
+
+    dbHelper.insertWeekdays(id, currentHabit.activedays);
+    
 
     Fluttertoast.showToast(msg: "Habit created succesfully");
   }

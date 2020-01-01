@@ -23,6 +23,15 @@ class HabitDatabase {
   static final columnIcon = 'icon';
   static final columnIsDone = 'isdone'; //used for to-do habits
 
+  static final weekdays = 'weekdays'; //name for weekdays table
+  static final columnMonday = 'monday';
+  static final columnTuesday = 'tuesday';
+  static final columnWednesday = 'wednesday';
+  static final columnThursday = 'thursday';
+  static final columnFriday = 'friday';
+  static final columnSaturday = 'saturday';
+  static final columnSunday = 'sunday';
+
   // make this a singleton class
   HabitDatabase._constructor();
 
@@ -62,6 +71,20 @@ class HabitDatabase {
       $columnIsDone INTEGER
     )
     ''');
+
+    //create weekdays table for daily habits
+    await db.execute('''
+    CREATE TABLE $weekdays (
+      $columnId INTEGER PRIMARY KEY,
+      $columnMonday INTEGER NOT NULL,
+      $columnTuesday INTEGER NOT NULL,
+      $columnWednesday INTEGER NOT NULL,
+      $columnThursday INTEGER NOT NULL,
+      $columnFriday INTEGER NOT NULL,
+      $columnSaturday INTEGER NOT NULL,
+      $columnSunday INTEGER NOT NULL
+    )
+    ''');
   }
 
   //Helper methods
@@ -73,6 +96,35 @@ class HabitDatabase {
   Future<int> insert(Map<String, dynamic> row) async {
     Database db = await instance.database;
     return await db.insert(table, row);
+  }
+
+  Future<int> insertWeekdays(int id, List<bool> activedays) async {
+    Database db = await instance.database;
+
+    Map<String, dynamic> weekdaysRow = {
+      HabitDatabase.columnId: id,
+      HabitDatabase.columnMonday: activedays[0] ? 1 : 0,
+      HabitDatabase.columnTuesday: activedays[1] ? 1 : 0,
+      HabitDatabase.columnWednesday: activedays[2] ? 1 : 0,
+      HabitDatabase.columnThursday: activedays[3] ? 1 : 0,
+      HabitDatabase.columnFriday: activedays[4] ? 1 : 0,
+      HabitDatabase.columnSaturday: activedays[5] ? 1 : 0,
+      HabitDatabase.columnSunday: activedays[6] ? 1 : 0,
+    };
+
+    return await db.insert(weekdays, weekdaysRow);
+  }
+
+  Future<int> getIdOfNewestDaily() async {
+    Database db = await instance.database;
+
+    List<int> list;
+
+    await getDailyHabitIDs().then((value) {
+      list = value;
+    });
+
+    return list.last;
   }
 
   //All of the rows are returned as a list of maps, where each map is a key-value
@@ -110,14 +162,13 @@ class HabitDatabase {
     try {
       HabitDatabase db = instance;
 
-      //TODO WEEKDAYS ARE MISSING
-
       Map<String, dynamic> row = {
         HabitDatabase.columnName: habit.title,
         HabitDatabase.columnDescription: habit.description,
         HabitDatabase.columnType: habit.type,
         HabitDatabase.columnIcon: HabitIcons.getStringFromIcon(habit.icon),
-        HabitDatabase.columnDueDate: habit.duedate.toIso8601String(),
+        HabitDatabase.columnDueDate:
+            (habit.duedate == null) ? null : habit.duedate.toIso8601String(),
         HabitDatabase.columnIsDone: HelperFunctions.boolToInt(habit.isdone),
       };
 
@@ -177,11 +228,52 @@ class HabitDatabase {
     return listOfHabits;
   }
 
+  Future<List<int>> getDailyHabitIDs() async {
+    Database db = await instance.database;
+    List<int> listOfIds = [];
+
+    await db
+        .rawQuery("SELECT $columnId FROM habits WHERE $columnType = 'daily'")
+        .then((value) {
+      List<Map> results = value;
+
+      if (results.length != 0) {
+        results.forEach((row) => listOfIds.add(row[columnId]));
+      }
+    });
+
+    return listOfIds;
+  }
+
+  Future<List<bool>> getWeekdays(int id) async {
+    Database db = await instance.database;
+    List<bool> currentHabitWeekdays = List<bool>();
+
+    await db
+        .rawQuery("SELECT * FROM $weekdays WHERE $columnId = $id")
+        .then((value) {
+      List<Map> results = value;
+
+      if (results.length != 0) {
+        results.forEach((row) => {  //this should always just be 1 row (check)
+              currentHabitWeekdays.add((row[columnMonday] == 1) ? true : false),
+              currentHabitWeekdays.add((row[columnTuesday] == 1) ? true : false),
+              currentHabitWeekdays.add((row[columnWednesday] == 1) ? true : false),
+              currentHabitWeekdays.add((row[columnThursday] == 1) ? true : false),
+              currentHabitWeekdays.add((row[columnFriday] == 1) ? true : false),
+              currentHabitWeekdays.add((row[columnSaturday] == 1) ? true : false),
+              currentHabitWeekdays.add((row[columnSunday] == 1) ? true : false),
+            });
+      }
+    });
+
+    return currentHabitWeekdays;
+  }
+
   Future<List<Habit>> getDailyHabits() async {
     Database db = await instance.database;
     List<Habit> listOfHabits = [];
-
-    //TODO WEEKDAYS ARE MISSING HERE
+    List<bool> weekDays;
 
     await db
         .rawQuery(
@@ -189,16 +281,19 @@ class HabitDatabase {
         .then((value) {
       List<Map> results = value;
 
-      List<String> tempWeekDays = ['Monday', 'Wednesday', 'Saturday'];
-
       if (results.length != 0) {
-        results.forEach((row) => listOfHabits.add((Habit.createDailyWithID(
-            row[columnId],
-            row[columnName],
-            row[columnDescription],
-            row[columnType],
-            row[columnIcon],
-            tempWeekDays))));
+        results.forEach((row) async => {
+              await getWeekdays(row[columnId]).then((value) {
+                weekDays = value;
+              }),
+              listOfHabits.add((Habit.createDailyWithID(
+                  row[columnId],
+                  row[columnName],
+                  row[columnDescription],
+                  row[columnType],
+                  HabitIcons.IconsFromString[columnIcon],
+                  weekDays)))
+            });
       }
     });
 
@@ -207,8 +302,6 @@ class HabitDatabase {
 
   Future<List<Habit>> getTodoHabits() async {
     Database db = await instance.database;
-
-    var test = await queryAllRows();
 
     List<Habit> listOfHabits = [];
 
