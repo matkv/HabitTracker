@@ -101,21 +101,20 @@ class _DailyWidgetState extends State<DailyWidget> {
                     Expanded(
                       flex: 1,
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         mainAxisSize: MainAxisSize.max,
-                        children: <Widget>[
-                          Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: habit.activedays
-                                  .map<Widget>((day) => CircleAvatar(
-                                        child: Text(day.toString()),
+                        children:  habit.activedays
+                                  .map<Widget>((day) => CircleAvatar(radius: 20,
+                                        child: Text(
+                                          day ? 'Y' : 'N',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
                                         backgroundColor:
                                             day ? Colors.green : Colors.red,
                                       ))
                                   .toList()),
-                        ],
-                      ),
+                        
+                      
                     ),
                   ],
                 ),

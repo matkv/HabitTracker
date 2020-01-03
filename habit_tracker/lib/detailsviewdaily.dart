@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:habit_tracker/habitcreator.dart';
 import 'package:habit_tracker/popupdetails.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +29,102 @@ class _DetailsViewDailyState extends State<DetailsViewDaily> {
       child: Container(
         width: 100,
         height: 300,
-        child: Text('Not yet built!'),
+        margin: EdgeInsets.all(10),
+        child: Flex(
+          direction: Axis.vertical,
+          children: <Widget>[
+            Expanded(
+              flex: 0,
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(left: 10),
+                      child: Column(
+                        children: <Widget>[
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              widget.widget.habit.title,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Column(
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(Icons.edit),
+                        color: Colors.red,
+                        onPressed: () {
+                          widget.setEditMode();
+                        },
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 0,
+              child: Divider(
+                indent: 10,
+                endIndent: 10,
+                thickness: 1.0,
+                color: Colors.red,
+              ),
+            ),
+            Expanded(
+              flex: 5,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Flexible(
+                    child: Text(
+                      widget.widget.habit.description,
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Divider(),
+            Expanded(
+              flex: 4,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisSize: MainAxisSize.max,
+                children: widget.widget.habit.activedays
+                    .map<Widget>((day) => CircleAvatar(
+                          radius: 15,
+                          child: Text(
+                            day ? 'Y' : 'N',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          backgroundColor: day ? Colors.green : Colors.red,
+                        ))
+                    .toList(),
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: Align(
+                alignment: Alignment.center,
+                child: FloatingActionButton(
+                    child: Icon(Icons.check),
+                    onPressed: () {
+                      Navigator.pop(context, true);
+                    }),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
