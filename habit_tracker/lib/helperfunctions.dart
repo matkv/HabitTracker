@@ -23,3 +23,35 @@ class HelperFunctions {
     }
   }
 }
+
+class WeekDays {
+  static List<String> days = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday'
+  ];
+
+  static List<bool> getActivedays(List<String> currentdays) {
+    List<bool> activeDays = List<bool>();
+
+    int index;
+
+    //fill list
+    for (var i = 0; i <= 6; i++) {
+      activeDays.add(false);
+    }   
+
+    //if the day is in currentdays, add its index in days to activedays bool list
+    days.forEach((String element) => {
+          if (currentdays.contains(element))
+            {index = days.indexOf(element), activeDays[index] = true}
+           
+        });
+
+    return activeDays;
+  }
+}

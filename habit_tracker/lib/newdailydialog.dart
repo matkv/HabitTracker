@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:habit_tracker/habitcreator.dart';
 import 'package:habit_tracker/habitdatabase.dart';
 import 'package:habit_tracker/habiticons.dart';
+import 'package:habit_tracker/helperfunctions.dart';
 import 'package:habit_tracker/helperwidgets.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -234,37 +235,5 @@ class _NewDailyState extends State<NewDailyDialog> {
         ),
       ),
     );
-  }
-}
-
-class WeekDays {
-  static List<String> days = [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday'
-  ];
-
-  static List<bool> getActivedays(List<String> currentdays) {
-    List<bool> activeDays = List<bool>();
-
-    int index;
-
-    //fill list
-    for (var i = 0; i <= 6; i++) {
-      activeDays.add(false);
-    }   
-
-    //if the day is in currentdays, add its index in days to activedays bool list
-    days.forEach((String element) => {
-          if (currentdays.contains(element))
-            {index = days.indexOf(element), activeDays[index] = true}
-           
-        });
-
-    return activeDays;
   }
 }
