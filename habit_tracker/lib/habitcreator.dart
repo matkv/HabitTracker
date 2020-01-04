@@ -50,6 +50,14 @@ class HabitCreator {
 
     bool successful = await dbHelper.updateHabit(habit);
 
+    if (habit.type == 'daily') {
+      int numberofaffectedrows = await dbHelper.updateWeekdays(habit.id, habit.activedays);
+     
+      if(numberofaffectedrows > 0){
+        successful = true;
+      }
+    }
+
     return successful;
   }
 }

@@ -115,6 +115,24 @@ class HabitDatabase {
     return await db.insert(weekdays, weekdaysRow);
   }
 
+  Future<int> updateWeekdays(int id, List<bool> activedays) async {
+
+     Database db = await instance.database;
+
+    Map<String, dynamic> weekdaysRow = {
+      HabitDatabase.columnId: id,
+      HabitDatabase.columnMonday: activedays[0] ? 1 : 0,
+      HabitDatabase.columnTuesday: activedays[1] ? 1 : 0,
+      HabitDatabase.columnWednesday: activedays[2] ? 1 : 0,
+      HabitDatabase.columnThursday: activedays[3] ? 1 : 0,
+      HabitDatabase.columnFriday: activedays[4] ? 1 : 0,
+      HabitDatabase.columnSaturday: activedays[5] ? 1 : 0,
+      HabitDatabase.columnSunday: activedays[6] ? 1 : 0,
+    };
+
+    return await updateDays(weekdaysRow);
+  }
+
   Future<int> getIdOfNewestDaily() async {
     Database db = await instance.database;
 
@@ -148,6 +166,14 @@ class HabitDatabase {
     int id = row[columnId];
     return await db.update(table, row, where: '$columnId = ?', whereArgs: [id]);
   }
+
+  Future<int> updateDays(Map<String, dynamic> row) async {
+    Database db = await instance.database;
+    int id = row[columnId];
+    return await db.update(weekdays, row, where: '$columnId = ?', whereArgs: [id]);
+  }
+
+
 
 //Deletes the row specified by the id. The number of affected rows is returned
 
@@ -183,9 +209,7 @@ class HabitDatabase {
 
   Future<bool> updateHabit(Habit habit) async {
     try {
-      HabitDatabase db = instance;
-
-      //TODO weekdays are missing
+      HabitDatabase db = instance;      
 
       Map<String, dynamic> row = {
         HabitDatabase.columnId: habit.id,
@@ -193,7 +217,8 @@ class HabitDatabase {
         HabitDatabase.columnDescription: habit.description,
         HabitDatabase.columnType: habit.type,
         HabitDatabase.columnIcon: HabitIcons.getStringFromIcon(habit.icon),
-        HabitDatabase.columnDueDate: habit.duedate.toIso8601String(),
+        HabitDatabase.columnDueDate:
+            (habit.duedate == null) ? null : habit.duedate.toIso8601String(),
         HabitDatabase.columnIsDone: HelperFunctions.boolToInt(habit.isdone),
       };
 
@@ -255,14 +280,22 @@ class HabitDatabase {
       List<Map> results = value;
 
       if (results.length != 0) {
-        results.forEach((row) => {  //this should always just be 1 row (check)
-              currentHabitWeekdays.add(HelperFunctions.intToBool(row[columnMonday])),
-              currentHabitWeekdays.add(HelperFunctions.intToBool(row[columnTuesday])),
-              currentHabitWeekdays.add(HelperFunctions.intToBool(row[columnWednesday])),
-              currentHabitWeekdays.add(HelperFunctions.intToBool(row[columnThursday])),
-              currentHabitWeekdays.add(HelperFunctions.intToBool(row[columnFriday])),
-              currentHabitWeekdays.add(HelperFunctions.intToBool(row[columnSaturday])),
-              currentHabitWeekdays.add(HelperFunctions.intToBool(row[columnSunday])),
+        results.forEach((row) => {
+              //this should always just be 1 row (check)
+              currentHabitWeekdays
+                  .add(HelperFunctions.intToBool(row[columnMonday])),
+              currentHabitWeekdays
+                  .add(HelperFunctions.intToBool(row[columnTuesday])),
+              currentHabitWeekdays
+                  .add(HelperFunctions.intToBool(row[columnWednesday])),
+              currentHabitWeekdays
+                  .add(HelperFunctions.intToBool(row[columnThursday])),
+              currentHabitWeekdays
+                  .add(HelperFunctions.intToBool(row[columnFriday])),
+              currentHabitWeekdays
+                  .add(HelperFunctions.intToBool(row[columnSaturday])),
+              currentHabitWeekdays
+                  .add(HelperFunctions.intToBool(row[columnSunday])),
             });
       }
     });
