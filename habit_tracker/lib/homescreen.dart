@@ -6,6 +6,7 @@ import 'package:habit_tracker/dailywidgetshomescreen.dart';
 import 'package:habit_tracker/habit.dart';
 import 'package:habit_tracker/habitdatabase.dart';
 import 'package:habit_tracker/todowidgetshomescreen.dart';
+import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
   final dbHelper = HabitDatabase.instance;
@@ -24,6 +25,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   _HomeScreenState(this.dbHelper, this.navigateTo);
 
+  DateTime _currentDay;
+  DateTime get currentDay => _currentDay;
+
+  @override
+  void initState() {
+    _currentDay = DateTime.now();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,6 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Card(
               margin: EdgeInsets.all(10),
               child: Calendar(
+                onDateSelected: (value) => setDay(value),
                 showTodayAction: false,
                 showCalendarPickerIcon: false,
               ),
@@ -71,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(
-                      'Today\'s Tasks',
+                      'Tasks ${DateFormat('dd.MM').format(currentDay)}',
                       style: TextStyle(fontSize: 25),
                     ),
                     IconButton(
@@ -89,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Container(
                     height: 180,
                     margin: EdgeInsets.only(left: 10.0, right: 10.0),
-                    child: ToDoWidgetsHomeScreen())
+                    child: todoWidgets)
               ],
             ),
             Container(
@@ -143,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     color: Colors.red,
                                   ),
                                   Text(
-                                    'December 2019',
+                                    '${DateFormat('MMMM yyyy').format(currentDay)}',
                                     style: TextStyle(fontSize: 20),
                                   )
                                 ],
@@ -167,6 +178,18 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+
+
+  ToDoWidgetsHomeScreen todoWidgets;
+
+  setDay(DateTime date){
+    setState(() {
+      _currentDay = date;
+      todoWidgets = new ToDoWidgetsHomeScreen(currentDay);
+    });
+    
   }
 
   Future goToHabitScreen() async {

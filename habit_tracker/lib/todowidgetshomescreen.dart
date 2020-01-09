@@ -8,17 +8,26 @@ import 'package:habit_tracker/todowidget.dart';
 import 'package:intl/intl.dart';
 
 class ToDoWidgetsHomeScreen extends StatefulWidget {
+  DateTime currentDay;
+
+  ToDoWidgetsHomeScreen(this.currentDay);
+
   @override
   State<StatefulWidget> createState() {
-    return _ToDoWidgetsHomeScreenState();
+    return _ToDoWidgetsHomeScreenState(currentDay);
   }
 }
 
 //https://api.flutter.dev/flutter/widgets/FutureBuilder-class.html
 
 class _ToDoWidgetsHomeScreenState extends State<ToDoWidgetsHomeScreen> {
-
   Future<List<Habit>> _future;
+
+  DateTime day;
+
+  _ToDoWidgetsHomeScreenState(DateTime currentDay) {
+    day = currentDay;
+  }
 
   Future<List<Habit>> getHabitsFromDatabase() async {
     var dbHelper = HabitDatabase.instance;
@@ -44,15 +53,28 @@ class _ToDoWidgetsHomeScreenState extends State<ToDoWidgetsHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var date = widget.currentDay;
+
     return FutureBuilder(
         //future: getHabitsFromDatabase(),
         future: _future,
         builder: (BuildContext context, AsyncSnapshot<List<Habit>> snapshot) {
           var widgetToShow;
 
+          var formatter = new DateFormat('yyyy-MM-dd');
+          String selectedDate = formatter.format(date);
+
           if (snapshot.hasData) {
-            if (snapshot.data.length > 0) {
-              var todopreviews = createToDoPreviews(snapshot);
+            List<Habit> filteredList = new List<Habit>();
+
+            snapshot.data.forEach((habit) {
+              if (formatter.format(habit.duedate) == selectedDate) {
+                filteredList.add(habit);
+              }
+            });
+
+            if (filteredList.length > 0){
+              var todopreviews = createToDoPreviews(filteredList);
               widgetToShow = ListView(
                 scrollDirection: Axis.horizontal,
                 children: todopreviews,
@@ -83,10 +105,8 @@ class _ToDoWidgetsHomeScreenState extends State<ToDoWidgetsHomeScreen> {
         });
   }
 
-
-
-  List<Widget> createToDoPreviews(AsyncSnapshot snapshot) {
-    return snapshot.data
+  List<Widget> createToDoPreviews(List<Habit> list) {
+    return list
         .map<Widget>((habit) => Card(
                 child: Flex(
               direction: Axis.horizontal,
@@ -188,7 +208,6 @@ class _ToDoWidgetsHomeScreenState extends State<ToDoWidgetsHomeScreen> {
                               ],
                             ),
                           ),
-                          
                         ],
                       ),
                     ),
