@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/editdaily.dart';
+import 'package:habit_tracker/edithabit.dart';
 import 'package:habit_tracker/edittodo.dart';
 import 'package:habit_tracker/habit.dart';
 
@@ -12,9 +13,6 @@ class EditScreen extends StatefulWidget {
 
 class _EditScreenState extends State<EditScreen> {
   Habit habit;
-
-  String _title;
-
   _EditScreenState(this.habit);
 
   @override
@@ -25,6 +23,11 @@ class _EditScreenState extends State<EditScreen> {
         break;
       case "daily":
         return EditDaily(habit);
+        break;
+
+      case "habit":
+      return EditHabit(habit);
+      break;
     }
   }
 }
