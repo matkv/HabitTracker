@@ -61,9 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: <Widget>[
                 Container(
                     height: 180,
-                    width: 200,                 
                     margin: EdgeInsets.only(left: 10.0, right: 10.0),
-                    
                     child: DailyWidgetsHomeScreen())
               ],
             ),
