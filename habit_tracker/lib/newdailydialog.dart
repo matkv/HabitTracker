@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:habit_tracker/habitcreator.dart';
 import 'package:habit_tracker/habitdatabase.dart';
 import 'package:habit_tracker/habiticons.dart';
+import 'package:habit_tracker/helperfunctions.dart';
 import 'package:habit_tracker/helperwidgets.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -214,9 +215,10 @@ class _NewDailyState extends State<NewDailyDialog> {
                       label: Text('Create Daily'),
                       icon: Icon(Icons.save),
                       onPressed: () async {
-                        if (_formKey.currentState.validate()){
+                        if (_formKey.currentState.validate()) {
                           _formKey.currentState.save();
-                          creator.createDaily(_title, _description, _type, _icon, _selectedDays);
+                          creator.createDaily(_title, _description, _type,
+                              _icon, WeekDays.getActivedays(_selectedDays));                              
 
                           Navigator.pop(
                               context,
@@ -234,16 +236,4 @@ class _NewDailyState extends State<NewDailyDialog> {
       ),
     );
   }
-}
-
-class WeekDays {
-  static List<String> days = [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday'
-  ];
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:habit_tracker/habit.dart';
 import 'package:habit_tracker/habitdatabase.dart';
 import 'package:habit_tracker/popupdetails.dart';
+import 'package:habit_tracker/todowidget.dart';
 import 'package:intl/intl.dart';
 
 class ToDoWidgetsHomeScreen extends StatefulWidget {
@@ -16,6 +17,9 @@ class ToDoWidgetsHomeScreen extends StatefulWidget {
 //https://api.flutter.dev/flutter/widgets/FutureBuilder-class.html
 
 class _ToDoWidgetsHomeScreenState extends State<ToDoWidgetsHomeScreen> {
+
+  Future<List<Habit>> _future;
+
   Future<List<Habit>> getHabitsFromDatabase() async {
     var dbHelper = HabitDatabase.instance;
     var habits;
@@ -33,10 +37,16 @@ class _ToDoWidgetsHomeScreenState extends State<ToDoWidgetsHomeScreen> {
   }
 
   @override
+  void initState() {
+    _future = getHabitsFromDatabase();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder(
         //future: getHabitsFromDatabase(),
-        future: getHabitsFromDatabase(),
+        future: _future,
         builder: (BuildContext context, AsyncSnapshot<List<Habit>> snapshot) {
           var widgetToShow;
 
@@ -72,6 +82,8 @@ class _ToDoWidgetsHomeScreenState extends State<ToDoWidgetsHomeScreen> {
           return widgetToShow;
         });
   }
+
+
 
   List<Widget> createToDoPreviews(AsyncSnapshot snapshot) {
     return snapshot.data

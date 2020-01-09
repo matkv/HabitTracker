@@ -4,32 +4,6 @@ import 'package:habit_tracker/habit.dart';
 import 'package:habit_tracker/habitcreator.dart';
 import 'package:habit_tracker/habiticons.dart';
 import 'package:habit_tracker/helperwidgets.dart';
-import 'package:habit_tracker/popupdetails.dart';
-import 'package:intl/intl.dart';
-
-class EditHabit extends StatefulWidget {
-  Habit habit;
-  EditHabit(this.habit);
-  @override
-  _EditHabitState createState() => _EditHabitState(habit);
-}
-
-class _EditHabitState extends State<EditHabit> {
-  Habit habit;
-
-  String _title;
-
-  _EditHabitState(this.habit);
-
-  @override
-  Widget build(BuildContext context) {
-    switch (habit.type) {
-      case "todo":
-        return EditTodo(habit);
-        break;
-    }
-  }
-}
 
 //Layout for editing a todo habit
 
