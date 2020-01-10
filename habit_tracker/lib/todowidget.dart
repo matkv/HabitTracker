@@ -20,29 +20,29 @@ class ToDoWidget extends StatefulWidget {
 class _ToDoWidgetState extends State<ToDoWidget> {
   Habit habit;
 
-  Color checkmarkColor = Colors.grey;
-
   _ToDoWidgetState(this.habit);
 
   @override
   Widget build(BuildContext context) {
-    return Card(color: habit.isdone ? Colors.lightGreen : Colors.white,
+    return Card(
+      color: habit.isdone ? Colors.lightGreen : Colors.white,
       child: Container(
         height: 200,
         child: GestureDetector(
           behavior: HitTestBehavior.translucent,
           onTap: () async {
-                  bool shouldUpdate = await showDialog(
-                    context: context,
-                    child: PopUpDetails(context: context, habit: habit,),
-                  );
-
-                  setState(() {
-                    //TODO react to what should happen once task is marked as done
-                    // send update command to database that updates the "done" value (TODO)
-                    //shouldUpdate ? reload data somehow
-                  });
-                },
+            await showDialog(
+              context: context,
+              child: PopUpDetails(
+                context: context,
+                habit: habit,
+              ),
+              
+            );
+            setState(() {
+              //this makes the widget reload after marking it as done/not done
+            });
+          },
           child: Flex(
             direction: Axis.horizontal,
             children: <Widget>[
@@ -103,7 +103,9 @@ class _ToDoWidgetState extends State<ToDoWidget> {
                           ),
                           Text(
                             DateFormat.yMMMMd("en_US").format(habit.duedate),
-                            style: TextStyle(fontSize: 15, ),
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
                           )
                         ],
                       ),
@@ -111,7 +113,24 @@ class _ToDoWidgetState extends State<ToDoWidget> {
                   ],
                 ),
               ),
-              
+              Visibility(
+                visible: habit.isdone ? true : false,
+                child: Expanded(
+                  flex: 1,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Ink(
+                        decoration: ShapeDecoration(
+                          color: Colors.white,
+                          shape: CircleBorder(),
+                        ),
+                        child: Icon(Icons.done, color: Colors.lightGreen, size: 45,)
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
