@@ -58,7 +58,6 @@ class _HabitWidgetState extends State<HabitWidget> {
                   ],
                 ),
               ),
-
               Expanded(
                 flex: 3,
                 child: Column(
@@ -97,13 +96,11 @@ class _HabitWidgetState extends State<HabitWidget> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Icon(
-                            Icons.whatshot,
-                            color: Colors.orange,
-                          ),
                           Text(
-                            'TODO Streak',
-                            style: TextStyle(fontSize: 15, ),
+                            'Streak runs out in 3 days',
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
                           )
                         ],
                       ),
@@ -116,25 +113,12 @@ class _HabitWidgetState extends State<HabitWidget> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Ink(
-                      decoration: ShapeDecoration(
-                        color: checkmarkColor,
-                        shape: CircleBorder(),
-                      ),
-                      child: IconButton(
-                        icon: Icon(Icons.check),
-                        color: Colors.white,
-                        onPressed: () {
-                          setState(() {
-                            if (checkmarkColor == Colors.green) {
-                              checkmarkColor = Colors.grey;
-                            } else {
-                              checkmarkColor = Colors.green;
-                            }
-                          });
-                        },
-                      ),
-                    ),
+                    Column(
+                      children: <Widget>[
+                        Icon(Icons.whatshot, size: 55),
+                        Text('1')
+                      ],
+                    )
                   ],
                 ),
               )
