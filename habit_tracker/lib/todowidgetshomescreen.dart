@@ -64,7 +64,7 @@ class _ToDoWidgetsHomeScreenState extends State<ToDoWidgetsHomeScreen> {
           var formatter = new DateFormat('yyyy-MM-dd');
           String selectedDate = formatter.format(date);
 
-          if (snapshot.hasData) {
+          if (snapshot.hasData && snapshot.data.length > 0) {
             List<Habit> filteredList = new List<Habit>();
 
             snapshot.data.forEach((habit) {
