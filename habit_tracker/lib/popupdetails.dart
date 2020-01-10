@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/detailsviewdaily.dart';
+import 'package:habit_tracker/detailsviewhabit.dart';
 import 'package:habit_tracker/detailsviewtodo.dart';
 import 'package:habit_tracker/editscreen.dart';
 import 'package:habit_tracker/habit.dart';
@@ -82,6 +83,13 @@ class _DetailsViewState extends State<DetailsView> {
 
       case 'daily':
         return DetailsViewDaily(
+          widget: widget,
+          setEditMode: setEditMode,
+        );
+        break;
+
+      case 'habit':
+        return DetailsViewHabit(
           widget: widget,
           setEditMode: setEditMode,
         );

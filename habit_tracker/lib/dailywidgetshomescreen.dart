@@ -6,14 +6,23 @@ import 'package:habit_tracker/habitdatabase.dart';
 import 'package:habit_tracker/popupdetails.dart';
 
 class DailyWidgetsHomeScreen extends StatefulWidget {
+  DateTime currentDay;
+  
+  DailyWidgetsHomeScreen(this.currentDay);
+
   @override
   State<StatefulWidget> createState() {
-    return _DailyWidgetsHomeScreenState();
+    return _DailyWidgetsHomeScreenState(currentDay);
   }
 }
 
 class _DailyWidgetsHomeScreenState extends State<DailyWidgetsHomeScreen> {
   Future<List<Habit>> _future;
+
+  DateTime day;
+  _DailyWidgetsHomeScreenState(DateTime currentDay){
+    day = currentDay;
+  }
 
   Future<List<Habit>> getHabitsFromDatabase() async {
     var dbHelper = HabitDatabase.instance;
@@ -39,15 +48,32 @@ class _DailyWidgetsHomeScreenState extends State<DailyWidgetsHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
+    var date = widget.currentDay;
+    
     return FutureBuilder(
         //future: getHabitsFromDatabase(),
         future: _future,
         builder: (BuildContext context, AsyncSnapshot<List<Habit>> snapshot) {
           var widgetToShow;
+          var weekday = 0;
 
-          if (snapshot.hasData) {
-            if (snapshot.data.length > 0) {
-              var dailypreviews = createDailyPreviews(snapshot);
+          //weekday property of date starts with 1
+          //my list of bool starts with monday = 0
+          weekday = date.weekday - 1;
+
+          if (snapshot.hasData && snapshot.data.length > 0) {
+            List<Habit> filteredList = new List<Habit>();
+            
+            snapshot.data.forEach((habit){
+              if (habit.activedays[weekday] == true) {
+                filteredList.add(habit);
+              }
+            });
+
+            if (filteredList.length > 0){
+
+              var dailypreviews = createDailyPreviews(filteredList);
               widgetToShow = ListView(
                 scrollDirection: Axis.horizontal,
                 children: dailypreviews,
@@ -78,8 +104,8 @@ class _DailyWidgetsHomeScreenState extends State<DailyWidgetsHomeScreen> {
         });
   }
 
-  List<Widget> createDailyPreviews(AsyncSnapshot snapshot) {
-    return snapshot.data
+  List<Widget> createDailyPreviews(List<Habit> list) {
+    return list
         .map<Widget>((habit) => Card(
                 child: Flex(
               direction: Axis.horizontal,
