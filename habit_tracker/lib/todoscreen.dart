@@ -68,6 +68,10 @@ Future<List<Habit>> _future;
 
           if (snapshot.hasData) {
             if (snapshot.data.length > 0) {
+              
+              //sort tasks by done / not done
+             snapshot.data.sort((a,b) => a.isdone.toString().compareTo(b.isdone.toString()));
+
               var todowidgets = createToDoWidgets(snapshot);
               widgetToShow = ListView(
                 scrollDirection: Axis.vertical,
@@ -99,7 +103,8 @@ Future<List<Habit>> _future;
         });
   }
 
-  List<Widget> createToDoWidgets(AsyncSnapshot snapshot) {
-    return snapshot.data.map<Widget>((habit) => ToDoWidget(habit)).toList();
+  List<Widget> createToDoWidgets(AsyncSnapshot snapshot) {    
+    List<Widget> list =  snapshot.data.map<Widget>((habit) => ToDoWidget(habit)).toList();    
+    return list;
   }
 }

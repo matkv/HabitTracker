@@ -73,7 +73,7 @@ class _ToDoWidgetsHomeScreenState extends State<ToDoWidgetsHomeScreen> {
               }
             });
 
-            if (filteredList.length > 0){
+            if (filteredList.length > 0) {
               var todopreviews = createToDoPreviews(filteredList);
               widgetToShow = ListView(
                 scrollDirection: Axis.horizontal,
@@ -108,7 +108,8 @@ class _ToDoWidgetsHomeScreenState extends State<ToDoWidgetsHomeScreen> {
   List<Widget> createToDoPreviews(List<Habit> list) {
     return list
         .map<Widget>((habit) => Card(
-                child: Flex(
+            color: habit.isdone ? Colors.lightGreen : Colors.white,
+            child: Flex(
               direction: Axis.horizontal,
               children: <Widget>[
                 Expanded(

@@ -26,7 +26,7 @@ class _ToDoWidgetState extends State<ToDoWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return Card(color: habit.isdone ? Colors.lightGreen : Colors.white,
       child: Container(
         height: 200,
         child: GestureDetector(
@@ -111,33 +111,7 @@ class _ToDoWidgetState extends State<ToDoWidget> {
                   ],
                 ),
               ),
-              Expanded(
-                flex: 1,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Ink(
-                      decoration: ShapeDecoration(
-                        color: checkmarkColor,
-                        shape: CircleBorder(),
-                      ),
-                      child: IconButton(
-                        icon: Icon(Icons.check),
-                        color: Colors.white,
-                        onPressed: () {
-                          setState(() {
-                            if (checkmarkColor == Colors.green) {
-                              checkmarkColor = Colors.grey;
-                            } else {
-                              checkmarkColor = Colors.green;
-                            }
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              )
+              
             ],
           ),
         ),
