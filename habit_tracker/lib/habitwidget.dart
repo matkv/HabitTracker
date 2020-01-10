@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/habit.dart';
+import 'package:habit_tracker/helperfunctions.dart';
 import 'package:habit_tracker/popupdetails.dart';
+import 'package:intl/intl.dart';
 
 class HabitWidget extends StatefulWidget {
   Habit habit;
@@ -15,10 +17,24 @@ class HabitWidget extends StatefulWidget {
 
 class _HabitWidgetState extends State<HabitWidget> {
   Habit habit;
+  int remainingDays;
+  DateTime endDate;
 
   Color checkmarkColor = Colors.grey;
 
   _HabitWidgetState(this.habit);
+
+  
+
+  @override
+  void initState() {
+    var helper = DateHelper();
+    endDate = helper.calculateEndDate(habit.lastupdate, habit.streakinterval);
+    remainingDays = helper.calculateRemainingDays(endDate, habit.streakinterval);
+
+    //todo if remainingdays is 0 (or smaller than zero?) set streak to zero.
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,19 +92,45 @@ class _HabitWidgetState extends State<HabitWidget> {
                       ),
                     ),
                     Expanded(
-                      flex: 3,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Flexible(
-                            child: Text(
-                              habit.description,
-                              style: TextStyle(fontSize: 15),
+                        flex: 3,
+                        child: Column(
+                          children: <Widget>[
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Flexible(
+                                  child: Text(
+                                    habit.description,
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                ),
+                              ],
                             ),
-                          )
-                        ],
-                      ),
-                    ),
+                            Spacer(),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Flexible(
+                                  child: Text(
+                                    "Last update: " + DateFormat.MMMMd("en_US").format(habit.lastupdate),
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Flexible(
+                                  child: Text(
+                                    "End date: " + DateFormat.MMMMd("en_US").format(endDate),
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        )),
                     Divider(),
                     Expanded(
                       flex: 2,
@@ -97,7 +139,7 @@ class _HabitWidgetState extends State<HabitWidget> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            'Streak runs out in 3 days',
+                            'Streak runs out in $remainingDays days',
                             style: TextStyle(
                               fontSize: 15,
                             ),
@@ -116,7 +158,7 @@ class _HabitWidgetState extends State<HabitWidget> {
                     Column(
                       children: <Widget>[
                         Icon(Icons.whatshot, size: 55),
-                        Text('1')
+                        Text(habit.streak.toString())
                       ],
                     )
                   ],

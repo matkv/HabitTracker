@@ -22,6 +22,8 @@ class _EditHabitState extends State<EditHabit> {
   String _title;
   String _description;
   IconData _icon;
+  int _streakinterval;
+  DateTime _lastupdate;
 
   List<IconData> _selectedIcons = [];
 
@@ -32,6 +34,8 @@ class _EditHabitState extends State<EditHabit> {
     _title = habit.title;
     _description = habit.description;
     _icon = habit.icon;
+    _lastupdate = habit.lastupdate;
+    _streakinterval = habit.streakinterval;
 
     super.initState();
   }
@@ -191,6 +195,10 @@ class _EditHabitState extends State<EditHabit> {
                           habit.title = _title;
                           habit.description = _description;
                           habit.icon = _icon;
+
+                          //TODO these two are not set yet in the edit screen
+                          habit.lastupdate = _lastupdate;
+                          habit.streakinterval = _streakinterval;
 
                           Future<bool> successful =
                               HabitCreator().updateHabit(habit);

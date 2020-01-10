@@ -7,9 +7,9 @@ import 'package:habit_tracker/habitdatabase.dart';
 class HabitCreator {
   final dbHelper = HabitDatabase.instance;
 
-  void createHabit(String title, String description, String type, IconData icon) {
+  void createHabit(String title, String description, String type, IconData icon, DateTime lastupdate, int streakinterval, int streak) {
 
-    Habit currentHabit = new Habit.createHabit(title, description, type, icon);
+    Habit currentHabit = new Habit.createHabit(title, description, type, icon, lastupdate, streakinterval, streak);    
     dbHelper.insertHabit(currentHabit);
 
     Fluttertoast.showToast(msg: "Habit created succesfully"); //TODO implement actual try-catch

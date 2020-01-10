@@ -55,3 +55,15 @@ class WeekDays {
     return activeDays;
   }
 }
+
+class DateHelper{
+  DateTime calculateEndDate(DateTime lastUpdate, int daysInterval){
+    var result = lastUpdate.add(Duration(days: daysInterval));
+    return result;
+  }
+
+  int calculateRemainingDays(DateTime endDate, int daysInterval){
+    var result = endDate.difference(DateTime.now()).inDays;
+    return result;
+  }
+}

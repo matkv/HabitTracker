@@ -22,6 +22,9 @@ class HabitDatabase {
   static final columnDueDate = 'duedate';
   static final columnIcon = 'icon';
   static final columnIsDone = 'isdone'; //used for to-do habits
+  static final columnLastUpdate = 'lastupdate';
+  static final columnStreakInterval = 'streakinterval';
+  static final columnStreak = 'streak';
 
   static final weekdays = 'weekdays'; //name for weekdays table
   static final columnMonday = 'monday';
@@ -68,7 +71,10 @@ class HabitDatabase {
       $columnIcon TEXT NOT NULL,
       $columnDescription TEXT,      
       $columnDueDate STRING,
-      $columnIsDone INTEGER
+      $columnIsDone INTEGER,
+      $columnLastUpdate STRING,
+      $columnStreakInterval INTEGER,
+      $columnStreak INTEGER
     )
     ''');
 
@@ -196,6 +202,9 @@ class HabitDatabase {
         HabitDatabase.columnDueDate:
             (habit.duedate == null) ? null : habit.duedate.toIso8601String(),
         HabitDatabase.columnIsDone: HelperFunctions.boolToInt(habit.isdone),
+        HabitDatabase.columnLastUpdate: (habit.lastupdate == null) ? null : habit.lastupdate.toIso8601String(),
+        HabitDatabase.columnStreakInterval: habit.streakinterval,
+        HabitDatabase.columnStreak: habit.streak
       };
 
       db.insert(row);
@@ -220,6 +229,11 @@ class HabitDatabase {
         HabitDatabase.columnDueDate:
             (habit.duedate == null) ? null : habit.duedate.toIso8601String(),
         HabitDatabase.columnIsDone: HelperFunctions.boolToInt(habit.isdone),
+        HabitDatabase.columnLastUpdate:
+            (habit.lastupdate == null) ? null : habit.lastupdate.toIso8601String(),
+        HabitDatabase.columnStreakInterval: habit.streakinterval,
+        HabitDatabase.columnStreak: habit.streak,
+
       };
 
       db.update(row);
@@ -237,7 +251,7 @@ class HabitDatabase {
 
     await db
         .rawQuery(
-            "SELECT $columnId, $columnName, $columnDescription, $columnType, $columnIcon FROM habits WHERE $columnType = 'habit'")
+            "SELECT $columnId, $columnName, $columnDescription, $columnType, $columnIcon, $columnLastUpdate, $columnStreakInterval, $columnStreak FROM habits WHERE $columnType = 'habit'")
         .then((value) {
       List<Map> results = value;
 
@@ -247,7 +261,11 @@ class HabitDatabase {
             row[columnName],
             row[columnDescription],
             row[columnType],
-            HabitIcons.IconsFromString[row[columnIcon]])));
+            HabitIcons.IconsFromString[row[columnIcon]],
+            DateTime.parse(row[columnLastUpdate]),
+            row[columnStreakInterval],
+            row[columnStreak]
+            )));
       }
     });
     return listOfHabits;
