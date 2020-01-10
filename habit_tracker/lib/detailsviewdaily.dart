@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:habit_tracker/habitcreator.dart';
+import 'package:habit_tracker/helperfunctions.dart';
 import 'package:habit_tracker/popupdetails.dart';
 import 'package:flutter/material.dart';
 
@@ -97,19 +98,39 @@ class _DetailsViewDailyState extends State<DetailsViewDaily> {
             Divider(),
             Expanded(
               flex: 4,
-              child: Row(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 mainAxisSize: MainAxisSize.max,
-                children: widget.widget.habit.activedays
-                    .map<Widget>((day) => CircleAvatar(
-                          radius: 15,
-                          child: Text(
-                            day ? 'Y' : 'N',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          backgroundColor: day ? Colors.green : Colors.red,
-                        ))
-                    .toList(),
+                children: <Widget>[
+                  Stack(
+                    alignment: Alignment.center,
+                    children: <Widget>[
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisSize: MainAxisSize.max,
+                          children: widget.widget.habit.activedays
+                              .map<Widget>((day) => CircleAvatar(
+                                    radius: 15,
+                                    backgroundColor:
+                                        day ? Colors.green : Colors.red,
+                                  ))
+                              .toList()),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisSize: MainAxisSize.max,
+                        children: WeekDays.days
+                            .map((wd) => Container(
+                                  padding: EdgeInsets.only(right: 10, left: 10),
+                                  child: Text(
+                                    wd[0],
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ))
+                            .toList(),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
             Expanded(

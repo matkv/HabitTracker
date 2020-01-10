@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:habit_tracker/habit.dart';
+import 'package:habit_tracker/helperfunctions.dart';
 import 'package:habit_tracker/popupdetails.dart';
+import 'dart:collection';
+
+import 'package:quiver/iterables.dart';
 
 class DailyWidget extends StatefulWidget {
   Habit habit;
@@ -16,6 +20,11 @@ class _DailyWidgetState extends State<DailyWidget> {
   Habit habit;
 
   _DailyWidgetState(this.habit);
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,21 +109,44 @@ class _DailyWidgetState extends State<DailyWidget> {
                     ),
                     Expanded(
                       flex: 1,
-                      child: Row(
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         mainAxisSize: MainAxisSize.max,
-                        children:  habit.activedays
-                                  .map<Widget>((day) => CircleAvatar(radius: 20,
-                                        child: Text(
-                                          day ? 'Y' : 'N',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        backgroundColor:
-                                            day ? Colors.green : Colors.red,
-                                      ))
-                                  .toList()),
-                        
-                      
+                        children: <Widget>[
+                          Stack(
+                            alignment: Alignment.center,
+                            children: <Widget>[
+                              Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: habit.activedays
+                                      .map<Widget>((day) => CircleAvatar(
+                                            radius: 20,
+                                            backgroundColor:
+                                                day ? Colors.green : Colors.red,
+                                          ))
+                                      .toList()),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                mainAxisSize: MainAxisSize.max,
+                                children: WeekDays.days
+                                    .map((wd) => Container(
+                                          padding: EdgeInsets.only(
+                                              right: 15, left: 15),
+                                          child: Text(
+                                            wd[0],
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        ))
+                                    .toList(),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
