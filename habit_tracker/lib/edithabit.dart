@@ -6,6 +6,7 @@ import 'package:habit_tracker/habit.dart';
 import 'package:habit_tracker/habitcreator.dart';
 import 'package:habit_tracker/habiticons.dart';
 import 'package:habit_tracker/helperwidgets.dart';
+import 'package:numberpicker/numberpicker.dart';
 
 class EditHabit extends StatefulWidget {
   Habit habit;
@@ -86,7 +87,7 @@ class _EditHabitState extends State<EditHabit> {
                 ),
               ),
               Expanded(
-                flex: 4,
+                flex: 3,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,6 +116,14 @@ class _EditHabitState extends State<EditHabit> {
                   ],
                 ),
               ),
+              Row(
+                children: <Widget>[
+                  Text(
+                    'Icon',
+                    style: TextStyle(fontSize: 25),
+                  ),
+                ],
+              ),
               FormField(
                 autovalidate: false,
                 validator: (value) {
@@ -134,12 +143,11 @@ class _EditHabitState extends State<EditHabit> {
                       crossAxisCount: 7,
                       crossAxisSpacing: 10.0,
                       children: HabitIcons.icons.map((iconData) {
-                        
                         //select current icon by default
                         if (_selectedIcons.length == 0) {
                           _selectedIcons.add(habit.icon);
                         }
-                        
+
                         return GestureDetector(
                           onTap: () {
                             _selectedIcons.clear();
@@ -157,7 +165,36 @@ class _EditHabitState extends State<EditHabit> {
                   );
                 },
               ),
-              
+              Row(
+                children: <Widget>[
+                  Text(
+                    'Streak interval $_streakinterval',
+                    style: TextStyle(fontSize: 25),
+                  ),
+                ],
+              ),
+              Expanded(
+                flex: 2,
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        child: FormField(builder: (FormFieldState<bool> state) {
+                          //TODO bool needed?
+                          return NumberPicker.horizontal(
+                            highlightSelectedValue: true,
+                            minValue: 1,
+                            maxValue: 31,
+                            initialValue: _streakinterval,
+                            onChanged: (value) =>
+                                setState(() => _streakinterval = value),
+                          );
+                        }),
+                      ),
+                    )
+                  ],
+                ),
+              ),
               Divider(
                 indent: 10.0,
                 endIndent: 10.0,
@@ -195,8 +232,6 @@ class _EditHabitState extends State<EditHabit> {
                           habit.title = _title;
                           habit.description = _description;
                           habit.icon = _icon;
-
-                          //TODO these two are not set yet in the edit screen
                           habit.lastupdate = _lastupdate;
                           habit.streakinterval = _streakinterval;
 
