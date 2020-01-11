@@ -1,8 +1,11 @@
 import 'package:flutter/widgets.dart';
+import 'package:habit_tracker/habit.dart';
 import 'package:habit_tracker/habitcreator.dart';
+import 'package:habit_tracker/habitdatabase.dart';
 import 'package:habit_tracker/helperfunctions.dart';
 import 'package:habit_tracker/popupdetails.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class DetailsViewDaily extends StatefulWidget {
   const DetailsViewDaily({
@@ -19,6 +22,14 @@ class DetailsViewDaily extends StatefulWidget {
 }
 
 class _DetailsViewDailyState extends State<DetailsViewDaily> {
+  bool isButtonEnabled;
+
+  @override
+  void initState() {
+    isButtonEnabled = HelperFunctions.isActiveDay(widget.widget.habit);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -82,16 +93,48 @@ class _DetailsViewDailyState extends State<DetailsViewDaily> {
             ),
             Expanded(
               flex: 5,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Column(
                 children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Flexible(
+                        child: Text(
+                          widget.widget.habit.description,
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      )
+                    ],
+                  ),
                   Flexible(
-                    child: Text(
-                      widget.widget.habit.description,
-                      style: TextStyle(fontSize: 15),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Flexible(
+                          child: Text(
+                            "Last update: " +
+                                DateFormat.MMMMd("en_US")
+                                    .format(widget.widget.habit.lastupdate),
+                            style: TextStyle(fontSize: 15),
+                          ),
+                        ),
+                      ],
                     ),
-                  )
+                  ),
+                  Flexible(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Flexible(
+                          child: Text(
+                            "Streak: " + widget.widget.habit.streak.toString(),
+                            style: TextStyle(fontSize: 15),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -138,12 +181,23 @@ class _DetailsViewDailyState extends State<DetailsViewDaily> {
               child: Align(
                 alignment: Alignment.center,
                 child: FloatingActionButton(
+                    backgroundColor: isButtonEnabled ? Colors.red : Colors.grey,
                     child: Icon(Icons.check),
                     onPressed: () {
-                      Navigator.pop(context, true);
+                      if (isButtonEnabled == true) {
+                        setState(() {
+                          var habit = widget.widget.habit;
+                          habit.lastupdate = DateTime.now();
+                          habit.streak++;
+                          var db = HabitDatabase.instance;
+                          db.updateHabit(habit);
+                        });
+
+                        Navigator.pop(context, true);
+                      }
                     }),
               ),
-            )
+            ),
           ],
         ),
       ),
