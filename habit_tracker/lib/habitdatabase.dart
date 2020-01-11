@@ -122,8 +122,7 @@ class HabitDatabase {
   }
 
   Future<int> updateWeekdays(int id, List<bool> activedays) async {
-
-     Database db = await instance.database;
+    Database db = await instance.database;
 
     Map<String, dynamic> weekdaysRow = {
       HabitDatabase.columnId: id,
@@ -176,10 +175,9 @@ class HabitDatabase {
   Future<int> updateDays(Map<String, dynamic> row) async {
     Database db = await instance.database;
     int id = row[columnId];
-    return await db.update(weekdays, row, where: '$columnId = ?', whereArgs: [id]);
+    return await db
+        .update(weekdays, row, where: '$columnId = ?', whereArgs: [id]);
   }
-
-
 
 //Deletes the row specified by the id. The number of affected rows is returned
 
@@ -202,7 +200,9 @@ class HabitDatabase {
         HabitDatabase.columnDueDate:
             (habit.duedate == null) ? null : habit.duedate.toIso8601String(),
         HabitDatabase.columnIsDone: HelperFunctions.boolToInt(habit.isdone),
-        HabitDatabase.columnLastUpdate: (habit.lastupdate == null) ? null : habit.lastupdate.toIso8601String(),
+        HabitDatabase.columnLastUpdate: (habit.lastupdate == null)
+            ? null
+            : habit.lastupdate.toIso8601String(),
         HabitDatabase.columnStreakInterval: habit.streakinterval,
         HabitDatabase.columnStreak: habit.streak
       };
@@ -218,7 +218,7 @@ class HabitDatabase {
 
   Future<bool> updateHabit(Habit habit) async {
     try {
-      HabitDatabase db = instance;      
+      HabitDatabase db = instance;
 
       Map<String, dynamic> row = {
         HabitDatabase.columnId: habit.id,
@@ -229,11 +229,11 @@ class HabitDatabase {
         HabitDatabase.columnDueDate:
             (habit.duedate == null) ? null : habit.duedate.toIso8601String(),
         HabitDatabase.columnIsDone: HelperFunctions.boolToInt(habit.isdone),
-        HabitDatabase.columnLastUpdate:
-            (habit.lastupdate == null) ? null : habit.lastupdate.toIso8601String(),
+        HabitDatabase.columnLastUpdate: (habit.lastupdate == null)
+            ? null
+            : habit.lastupdate.toIso8601String(),
         HabitDatabase.columnStreakInterval: habit.streakinterval,
         HabitDatabase.columnStreak: habit.streak,
-
       };
 
       db.update(row);
@@ -264,8 +264,7 @@ class HabitDatabase {
             HabitIcons.IconsFromString[row[columnIcon]],
             DateTime.parse(row[columnLastUpdate]),
             row[columnStreakInterval],
-            row[columnStreak]
-            )));
+            row[columnStreak])));
       }
     });
     return listOfHabits;
@@ -328,7 +327,7 @@ class HabitDatabase {
 
     await db
         .rawQuery(
-            "SELECT $columnId, $columnName, $columnDescription, $columnType, $columnIcon FROM habits WHERE $columnType = 'daily'")
+            "SELECT $columnId, $columnName, $columnDescription, $columnType, $columnIcon, $columnLastUpdate, $columnStreak FROM habits WHERE $columnType = 'daily'")
         .then((value) {
       List<Map> results = value;
 
@@ -338,12 +337,15 @@ class HabitDatabase {
                 weekDays = value;
               }),
               listOfHabits.add((Habit.createDailyWithID(
-                  row[columnId],
-                  row[columnName],
-                  row[columnDescription],
-                  row[columnType],
-                  HabitIcons.IconsFromString[row[columnIcon]],
-                  weekDays)))
+                row[columnId],
+                row[columnName],
+                row[columnDescription],
+                row[columnType],
+                HabitIcons.IconsFromString[row[columnIcon]],
+                weekDays,
+                DateTime.parse(row[columnLastUpdate]),
+                row[columnStreak]
+              )))
             });
       }
     });

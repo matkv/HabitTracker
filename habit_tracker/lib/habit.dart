@@ -33,12 +33,12 @@ class Habit {
 
   //constructor for daily habit
   Habit.createDaily(
-      this.title, this.description, this.type, this.icon, this.activedays);
+      this.title, this.description, this.type, this.icon, this.activedays, this.lastupdate, this.streak);
 
   //constructor for daily habit with id - used when loading from habitdatabse
 
   Habit.createDailyWithID(this.id, this.title, this.description, this.type,
-      this.icon, this.activedays);
+      this.icon, this.activedays, this.lastupdate, this.streak);
 
   Map<String, dynamic> toMap() {
     //TODO is this still used?

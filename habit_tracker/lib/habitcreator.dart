@@ -22,9 +22,9 @@ class HabitCreator {
   }
 
   Future<void> createDaily(String title, String description, String type,
-      IconData icon, List<bool> activedays) async {
+      IconData icon, List<bool> activedays, DateTime lastupdate, int streak) async {
     Habit currentHabit =
-        new Habit.createDaily(title, description, type, icon, activedays);
+        new Habit.createDaily(title, description, type, icon, activedays, lastupdate, streak);
 
     var successful = await dbHelper.insertHabit(currentHabit);
 
