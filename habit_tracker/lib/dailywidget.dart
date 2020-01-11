@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:habit_tracker/habit.dart';
 import 'package:habit_tracker/helperfunctions.dart';
 import 'package:habit_tracker/popupdetails.dart';
+import 'package:intl/intl.dart';
 import 'dart:collection';
 
 import 'package:quiver/iterables.dart';
@@ -86,17 +87,42 @@ class _DailyWidgetState extends State<DailyWidget> {
                                   ),
                                 ),
                                 Expanded(
-                                  flex: 3,
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  flex: 4,
+                                  child: Column(
                                     children: <Widget>[
-                                      Flexible(
-                                        child: Text(
-                                          habit.description,
-                                          style: TextStyle(fontSize: 15),
-                                        ),
-                                      )
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Flexible(
+                                            child: Text(
+                                              habit.description,
+                                              style: TextStyle(fontSize: 15),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Flexible(
+                                            child: Text(
+                                              'Streak: ' +
+                                                  habit.streak.toString(),
+                                              style: TextStyle(fontSize: 15),
+                                            ),
+                                          ),
+                                          Flexible(
+                                            child: Text(
+                                              'Last Update: ' +
+                                                  DateFormat.MMMMd("en_US")
+                                                      .format(habit.lastupdate),
+                                              style: TextStyle(fontSize: 15),
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ],
                                   ),
                                 ),
