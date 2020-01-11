@@ -30,12 +30,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    _currentDay = DateTime.now();
+    // if (_currentDay == null) {
+    //   _currentDay = DateTime.now();
+    // }
 
-    //load to-do widgets and daily widgets without having to select a date
-    todoWidgets = new ToDoWidgetsHomeScreen(currentDay); 
-    dailyWidgets = new DailyWidgetsHomeScreen(currentDay); 
-
+    setDay(DateTime.now());
+    
     super.initState();
   }
 
@@ -191,6 +191,7 @@ class _HomeScreenState extends State<HomeScreen> {
   setDay(DateTime date){
     setState(() {
       _currentDay = date;
+      
       todoWidgets = new ToDoWidgetsHomeScreen(currentDay);
       dailyWidgets = new DailyWidgetsHomeScreen(currentDay);
     });
