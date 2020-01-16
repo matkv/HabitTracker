@@ -33,9 +33,10 @@ class ToDoWidgetList extends StatefulWidget {
 }
 
 class _ToDoWidgetsListState extends State<ToDoWidgetList> {
-Future<List<Habit>> _future;
+  Future<List<Habit>> _future;
+  var widgetToShow;
+  bool builtfromSwipe = false;
 
-  //TODO move this to separate class? used in todowidgetshomescreen too
   Future<List<Habit>> getHabitsFromDatabase() async {
     var dbHelper = HabitDatabase.instance;
     var habits;
@@ -60,51 +61,72 @@ Future<List<Habit>> _future;
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        //future: getHabitsFromDatabase(),
-        future: _future,
-        builder: (BuildContext context, AsyncSnapshot<List<Habit>> snapshot) {
-          var widgetToShow;
+    return RefreshIndicator(
+      child: FutureBuilder(
+          //future: getHabitsFromDatabase(),
+          future: _future,
+          builder: (BuildContext context, AsyncSnapshot<List<Habit>> snapshot) {
+            if (builtfromSwipe == false) {
+              if (snapshot.hasData) {
+                if (snapshot.data.length > 0) {
+                  //sort tasks by done / not done
+                  snapshot.data.sort((a, b) =>
+                      a.isdone.toString().compareTo(b.isdone.toString()));
 
-          if (snapshot.hasData) {
-            if (snapshot.data.length > 0) {
-              
-              //sort tasks by done / not done
-             snapshot.data.sort((a,b) => a.isdone.toString().compareTo(b.isdone.toString()));
-
-              var todowidgets = createToDoWidgets(snapshot);
-              widgetToShow = ListView(
-                scrollDirection: Axis.vertical,
-                children: todowidgets,
-              );
-            } else {
-              //show placeholder text if no to-do tasks were created yet
-              widgetToShow = Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    'No To-Do tasks found!',
-                  )
-                ],
-              );
+                  var todowidgets = createToDoWidgets(snapshot);
+                  widgetToShow = ListView(
+                    scrollDirection: Axis.vertical,
+                    children: todowidgets,
+                  );
+                } else {
+                  //show placeholder text if no to-do tasks were created yet
+                  widgetToShow = Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        'No To-Do tasks found!',
+                      )
+                    ],
+                  );
+                }
+              } else {
+                //Progress inditcator while todo tasks are loaded
+                widgetToShow = Center(
+                  child: SizedBox(
+                    child: CircularProgressIndicator(),
+                    height: 20,
+                    width: 20,
+                  ),
+                );
+              }
             }
-          } else {
-            //Progress inditcator while todo tasks are loaded
-            widgetToShow = Center(
-              child: SizedBox(
-                child: CircularProgressIndicator(),
-                height: 20,
-                width: 20,
-              ),
-            );
-          }
 
-          return widgetToShow;
-        });
+            return widgetToShow;
+          }),
+      onRefresh: _refreshList,
+    );
   }
 
-  List<Widget> createToDoWidgets(AsyncSnapshot snapshot) {    
-    List<Widget> list =  snapshot.data.map<Widget>((habit) => ToDoWidget(habit)).toList();    
+  List<Widget> createToDoWidgets(AsyncSnapshot snapshot) {
+    List<Widget> list =
+        snapshot.data.map<Widget>((habit) => ToDoWidget(habit)).toList();
     return list;
+  }
+
+  createList(List<Habit> list) {
+    return list.map<Widget>((habit) => ToDoWidget(habit)).toList();
+  }
+
+  Future<void> _refreshList() async {
+    await getHabitsFromDatabase().then((value) {
+      setState(() {
+        builtfromSwipe = true;
+
+        widgetToShow = ListView(
+          scrollDirection: Axis.vertical,
+          children: createList(value),
+        );
+      });
+    });
   }
 }
