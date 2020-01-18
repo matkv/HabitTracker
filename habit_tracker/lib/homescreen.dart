@@ -28,15 +28,38 @@ class _HomeScreenState extends State<HomeScreen> {
   DateTime _currentDay;
   DateTime get currentDay => _currentDay;
 
+  //used for statistics
+
+  int totalHabits = 0;
+  int normalHabitsCount = 0;
+  int dailyHabitsCount = 0;
+  int todoHabitsCount = 0;
+  List<Map<String, dynamic>> habitdata;
+
   @override
   void initState() {
-    // if (_currentDay == null) {
-    //   _currentDay = DateTime.now();
-    // }
-
     setDay(DateTime.now());
-    
+
+    getStatistics();
+
     super.initState();
+  }
+
+  getStatistics() async {
+    var database = HabitDatabase.instance;
+    setState(() async{
+      totalHabits = await database.queryRowCount();
+    normalHabitsCount = await database.getHabits().then((value) {
+      return value.length;
+    });
+    dailyHabitsCount = await database.getDailyHabits().then((value) {
+      return value.length;
+    });
+    todoHabitsCount = await database.getTodoHabits().then((value) {
+      return value.length;
+    });
+    });
+    
   }
 
   @override
@@ -122,60 +145,56 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: SizedBox(
                     width: 140,
                     child: Container(
-                      margin: EdgeInsets.only(left: 10, right: 10),
-                      child: Column(
+                      margin: EdgeInsets.all(10),
+                      child: Flex(direction: Axis.vertical, children: <Widget>[Expanded(flex: 1,child:  Column(
                         children: <Widget>[
-                          Container(
-                            width: 140,
-                            margin: EdgeInsets.only(top: 5.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                Icon(
-                                  Icons.favorite,
-                                  color: Colors.red,
-                                  size: 20.0,
-                                ),
-                                Text(
-                                  'Overview',
-                                  style: TextStyle(fontSize: 17),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Divider(
-                            indent: 10.0,
-                            endIndent: 10.0,
-                            thickness: 1.0,
-                            color: Colors.red,
-                          ),
                           Row(
                             children: <Widget>[
-                              Row(
-                                children: <Widget>[
-                                  Icon(
-                                    Icons.calendar_today,
-                                    size: 35,
-                                    color: Colors.red,
-                                  ),
-                                  Text(
-                                    '${DateFormat('MMMM yyyy').format(currentDay)}',
-                                    style: TextStyle(fontSize: 20),
-                                  )
-                                ],
+                              Icon(
+                                Icons.calendar_today,
+                                size: 25,
+                                color: Colors.red,
                               ),
+                              Text(
+                                '${DateFormat('MMMM yyyy').format(currentDay)}',
+                                style: TextStyle(fontSize: 20),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: <Widget>[
+                              Text(
+                                'Total habits: ' + totalHabits.toString(),
+                              )
                             ],
                           ),
                           Row(
                             children: <Widget>[
                               Text(
-                                'Statistics',
-                                style: TextStyle(fontSize: 30),
+                                'Normal habits: ' +
+                                    normalHabitsCount.toString(),
+                              )
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text(
+                                'Daily habits: ' +
+                                    dailyHabitsCount.toString(),
+                              )
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text(
+                                'To-Do tasks: ' +
+                                    todoHabitsCount.toString(),
                               )
                             ],
                           )
                         ],
-                      ),
+                      ),)],)
                     )),
               ),
             ),
@@ -188,14 +207,13 @@ class _HomeScreenState extends State<HomeScreen> {
   ToDoWidgetsHomeScreen todoWidgets;
   DailyWidgetsHomeScreen dailyWidgets;
 
-  setDay(DateTime date){
+  setDay(DateTime date) {
     setState(() {
       _currentDay = date;
-      
+
       todoWidgets = new ToDoWidgetsHomeScreen(currentDay);
       dailyWidgets = new DailyWidgetsHomeScreen(currentDay);
     });
-    
   }
 
   Future goToHabitScreen() async {
@@ -210,4 +228,3 @@ class _HomeScreenState extends State<HomeScreen> {
     navigateTo(3);
   }
 }
-
