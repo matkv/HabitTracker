@@ -24,6 +24,14 @@ class _DailyWidgetState extends State<DailyWidget> {
 
   @override
   void initState() {
+
+    //TODO RESET DAILY HABIT
+
+    // if (habit.lastupdate) {
+      
+    // }
+
+
     super.initState();
   }
 
@@ -87,7 +95,7 @@ class _DailyWidgetState extends State<DailyWidget> {
                                   ),
                                 ),
                                 Expanded(
-                                  flex: 4,
+                                  flex: 2,
                                   child: Column(
                                     children: <Widget>[
                                       Row(
@@ -106,13 +114,7 @@ class _DailyWidgetState extends State<DailyWidget> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
-                                          Flexible(
-                                            child: Text(
-                                              'Streak: ' +
-                                                  habit.streak.toString(),
-                                              style: TextStyle(fontSize: 15),
-                                            ),
-                                          ),
+                                          
                                           Flexible(
                                             child: Text(
                                               'Last Update: ' +
@@ -126,10 +128,36 @@ class _DailyWidgetState extends State<DailyWidget> {
                                     ],
                                   ),
                                 ),
-                                Divider(),
                               ],
                             ),
                           ),
+                          Expanded(
+                            flex: 1,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Stack(
+                                  alignment: Alignment.center,
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.whatshot,
+                                      size: 70,
+                                      color: Colors.deepOrange,
+                                    ),
+                                    Container(
+                                        margin:
+                                            EdgeInsets.only(top: 20, left: 7),
+                                        child: Text(
+                                          habit.streak.toString(),
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold),
+                                        )),
+                                  ],
+                                )
+                              ],
+                            ),
+                          )
                         ],
                       ),
                     ),
