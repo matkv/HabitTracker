@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:habit_tracker/habit.dart';
+import 'package:habit_tracker/habitdatabase.dart';
 import 'package:habit_tracker/helperfunctions.dart';
 import 'package:habit_tracker/popupdetails.dart';
 import 'package:intl/intl.dart';
@@ -24,15 +25,38 @@ class _DailyWidgetState extends State<DailyWidget> {
 
   @override
   void initState() {
+    
 
-    //TODO RESET DAILY HABIT
-
-    // if (habit.lastupdate) {
-      
-    // }
-
+    checkAndResetStreak();
 
     super.initState();
+  }
+
+  void checkAndResetStreak() {
+    String datelastupdate = DateFormat.yMd().format(habit.lastupdate);
+    String todaysdate = DateFormat.yMd().format(DateTime.now());
+    
+    if (datelastupdate != todaysdate) {
+      if (HelperFunctions.isActiveDay(habit)) {
+        //only do this on active days
+    
+        var dayToCheck = DateTime.now().subtract(Duration(days: 1));
+    
+        while (HelperFunctions.isSpecificDateActiveDay(
+            dayToCheck, habit) == false) {
+              dayToCheck = dayToCheck.subtract(Duration(days: 1));
+            }
+    
+            if (habit.lastupdate.isAfter(dayToCheck) == false) {
+              //reset streak
+              habit.streak = 0;
+              habit.lastupdate = DateTime.now();
+              
+              HabitDatabase.instance.updateHabit(habit);
+              initState();
+            }
+      }
+    }
   }
 
   @override
@@ -114,7 +138,6 @@ class _DailyWidgetState extends State<DailyWidget> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
-                                          
                                           Flexible(
                                             child: Text(
                                               'Last Update: ' +

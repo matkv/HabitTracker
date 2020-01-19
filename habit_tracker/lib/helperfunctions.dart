@@ -40,20 +40,40 @@ class HelperFunctions {
       String day = DateFormat('EEEE').format(today);
 
       if (activedaysStrings.contains(day)) {
-
         //get dates without the timestamp
         String datelastupdate = DateFormat.yMd().format(habit.lastupdate);
         String todaysdate = DateFormat.yMd().format(DateTime.now());
 
         if (datelastupdate == todaysdate) {
-            if (habit.streak == 0){
-              return true;
-            }
-            else{
-              return false;
-            }
+          if (habit.streak == 0) {
+            return true;
+          } else {
+            return false;
           }
+        }
 
+        return true;
+      } else {
+        return false;
+      }
+    }
+    return false;
+  }
+
+  static bool isSpecificDateActiveDay(DateTime specificDay, Habit habit) {
+    List<String> activedaysStrings = new List<String>();
+
+    for (var i = 0; i < habit.activedays.length; i++) {
+      if (habit.activedays[i] == true) {
+        activedaysStrings.add(WeekDays.days[i]);
+      }
+    }
+
+    if (activedaysStrings.length > 0) {
+      DateTime daytocheck = specificDay;
+      String day = DateFormat('EEEE').format(daytocheck);
+
+      if (activedaysStrings.contains(day)) {
         return true;
       } else {
         return false;
