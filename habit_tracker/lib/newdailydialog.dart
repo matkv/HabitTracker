@@ -217,8 +217,18 @@ class _NewDailyState extends State<NewDailyDialog> {
                       onPressed: () async {
                         if (_formKey.currentState.validate()) {
                           _formKey.currentState.save();
-                          creator.createDaily(_title, _description, _type,
-                              _icon, WeekDays.getActivedays(_selectedDays));                              
+
+                          DateTime lastUpdate = DateTime.now();
+                          int initialStreak = 0;
+
+                          creator.createDaily(
+                              _title,
+                              _description,
+                              _type,
+                              _icon,
+                              WeekDays.getActivedays(_selectedDays),
+                              lastUpdate,
+                              initialStreak);
 
                           Navigator.pop(
                               context,

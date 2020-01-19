@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:habit_tracker/habit.dart';
+import 'package:habit_tracker/habitdatabase.dart';
+import 'package:habit_tracker/helperfunctions.dart';
 import 'package:habit_tracker/popupdetails.dart';
+import 'package:intl/intl.dart';
+import 'dart:collection';
+
+import 'package:quiver/iterables.dart';
 
 class DailyWidget extends StatefulWidget {
   Habit habit;
@@ -16,6 +22,42 @@ class _DailyWidgetState extends State<DailyWidget> {
   Habit habit;
 
   _DailyWidgetState(this.habit);
+
+  @override
+  void initState() {
+    
+
+    checkAndResetStreak();
+
+    super.initState();
+  }
+
+  void checkAndResetStreak() {
+    String datelastupdate = DateFormat.yMd().format(habit.lastupdate);
+    String todaysdate = DateFormat.yMd().format(DateTime.now());
+    
+    if (datelastupdate != todaysdate) {
+      if (HelperFunctions.isActiveDay(habit)) {
+        //only do this on active days
+    
+        var dayToCheck = DateTime.now().subtract(Duration(days: 1));
+    
+        while (HelperFunctions.isSpecificDateActiveDay(
+            dayToCheck, habit) == false) {
+              dayToCheck = dayToCheck.subtract(Duration(days: 1));
+            }
+    
+            if (habit.lastupdate.isAfter(dayToCheck) == false) {
+              //reset streak
+              habit.streak = 0;
+              habit.lastupdate = DateTime.now();
+              
+              HabitDatabase.instance.updateHabit(habit);
+              initState();
+            }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,44 +119,111 @@ class _DailyWidgetState extends State<DailyWidget> {
                                   ),
                                 ),
                                 Expanded(
-                                  flex: 3,
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  flex: 2,
+                                  child: Column(
                                     children: <Widget>[
-                                      Flexible(
-                                        child: Text(
-                                          habit.description,
-                                          style: TextStyle(fontSize: 15),
-                                        ),
-                                      )
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Flexible(
+                                            child: Text(
+                                              habit.description,
+                                              style: TextStyle(fontSize: 15),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Flexible(
+                                            child: Text(
+                                              'Last Update: ' +
+                                                  DateFormat.MMMMd("en_US")
+                                                      .format(habit.lastupdate),
+                                              style: TextStyle(fontSize: 15),
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ],
                                   ),
                                 ),
-                                Divider(),
                               ],
                             ),
                           ),
+                          Expanded(
+                            flex: 1,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Stack(
+                                  alignment: Alignment.center,
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.whatshot,
+                                      size: 70,
+                                      color: Colors.deepOrange,
+                                    ),
+                                    Container(
+                                        margin:
+                                            EdgeInsets.only(top: 20, left: 7),
+                                        child: Text(
+                                          habit.streak.toString(),
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold),
+                                        )),
+                                  ],
+                                )
+                              ],
+                            ),
+                          )
                         ],
                       ),
                     ),
                     Expanded(
                       flex: 1,
-                      child: Row(
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         mainAxisSize: MainAxisSize.max,
-                        children:  habit.activedays
-                                  .map<Widget>((day) => CircleAvatar(radius: 20,
-                                        child: Text(
-                                          day ? 'Y' : 'N',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        backgroundColor:
-                                            day ? Colors.green : Colors.red,
-                                      ))
-                                  .toList()),
-                        
-                      
+                        children: <Widget>[
+                          Stack(
+                            alignment: Alignment.center,
+                            children: <Widget>[
+                              Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: habit.activedays
+                                      .map<Widget>((day) => CircleAvatar(
+                                            radius: 20,
+                                            backgroundColor:
+                                                day ? Colors.green : Colors.red,
+                                          ))
+                                      .toList()),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                mainAxisSize: MainAxisSize.max,
+                                children: WeekDays.days
+                                    .map((wd) => Container(
+                                          padding: EdgeInsets.only(
+                                              right: 19, left: 15),
+                                          child: Text(
+                                            wd[0],
+                                            style:
+                                                TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                          ),
+                                        ))
+                                    .toList(),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

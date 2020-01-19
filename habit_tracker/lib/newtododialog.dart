@@ -148,8 +148,10 @@ class _NewToDoState extends State<NewToDoDialog> {
                 builder: (FormFieldState<bool> state) {
                   return Center(
                       child: Row(
-                    mainAxisSize: MainAxisSize.min,
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
+                      Text('Current Date: ', style: TextStyle(fontWeight: FontWeight.bold),),
                       Text(DateFormat('dd.MMMM yyyy').format(_dueDate)),
                       SizedBox(
                         height: 20.0,
