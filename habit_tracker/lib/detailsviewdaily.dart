@@ -91,6 +91,7 @@ class _DetailsViewDailyState extends State<DetailsViewDaily> {
                 color: Colors.red,
               ),
             ),
+            
             Expanded(
               flex: 5,
               child: Column(
@@ -107,8 +108,10 @@ class _DetailsViewDailyState extends State<DetailsViewDaily> {
                       )
                     ],
                   ),
+                  Spacer(),
                   Flexible(
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Flexible(
@@ -125,6 +128,7 @@ class _DetailsViewDailyState extends State<DetailsViewDaily> {
                   Flexible(
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Flexible(
                           child: Text(

@@ -211,11 +211,11 @@ class _DailyWidgetState extends State<DailyWidget> {
                                 children: WeekDays.days
                                     .map((wd) => Container(
                                           padding: EdgeInsets.only(
-                                              right: 15, left: 15),
+                                              right: 19, left: 15),
                                           child: Text(
                                             wd[0],
                                             style:
-                                                TextStyle(color: Colors.white),
+                                                TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                                           ),
                                         ))
                                     .toList(),

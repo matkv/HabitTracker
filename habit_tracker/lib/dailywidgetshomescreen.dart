@@ -135,11 +135,11 @@ class _DailyWidgetsHomeScreenState extends State<DailyWidgetsHomeScreen> {
                         direction: Axis.horizontal,
                         children: <Widget>[
                           Expanded(
-                            flex: 4,
+                            flex: 2,
                             child: Column(
                               children: <Widget>[
                                 Expanded(
-                                  flex: 1,
+                                  flex: 2,
                                   child: Row(
                                     children: <Widget>[
                                       Expanded(
@@ -194,7 +194,7 @@ class _DailyWidgetsHomeScreenState extends State<DailyWidgetsHomeScreen> {
                                                 ],
                                               ),
                                             ),
-                                            Divider(),
+                                            
                                           ],
                                         ),
                                       ),
@@ -231,8 +231,8 @@ class _DailyWidgetsHomeScreenState extends State<DailyWidgetsHomeScreen> {
                                             children: WeekDays.days
                                                 .map((wd) => Container(
                                                     padding: EdgeInsets.only(
-                                                        right: 10, left: 10),
-                                                    child: Text(wd[0], style: TextStyle(color: Colors.white),),))
+                                                        right: 15, left: 10),
+                                                    child: Text(wd[0], style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),))
                                                 .toList(),
                                           ),
                                         ],

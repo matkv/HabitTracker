@@ -47,19 +47,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   getStatistics() async {
     var database = HabitDatabase.instance;
-    setState(() async{
+    setState(() async {
       totalHabits = await database.queryRowCount();
-    normalHabitsCount = await database.getHabits().then((value) {
-      return value.length;
+      normalHabitsCount = await database.getHabits().then((value) {
+        return value.length;
+      });
+      dailyHabitsCount = await database.getDailyHabits().then((value) {
+        return value.length;
+      });
+      todoHabitsCount = await database.getTodoHabits().then((value) {
+        return value.length;
+      });
     });
-    dailyHabitsCount = await database.getDailyHabits().then((value) {
-      return value.length;
-    });
-    todoHabitsCount = await database.getTodoHabits().then((value) {
-      return value.length;
-    });
-    });
-    
   }
 
   @override
@@ -145,57 +144,100 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: SizedBox(
                     width: 140,
                     child: Container(
-                      margin: EdgeInsets.all(10),
-                      child: Flex(direction: Axis.vertical, children: <Widget>[Expanded(flex: 1,child:  Column(
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Icon(
-                                Icons.calendar_today,
-                                size: 25,
-                                color: Colors.red,
+                        margin: EdgeInsets.all(10),
+                        child: Flex(
+                          direction: Axis.vertical,
+                          children: <Widget>[
+                            Expanded(
+                              flex: 1,
+                              child: Column(
+                                children: <Widget>[
+                                  Row(
+                                    children: <Widget>[
+                                      Icon(
+                                        Icons.calendar_today,
+                                        size: 25,
+                                        color: Colors.red,
+                                      ),
+                                      Text(
+                                        ' ${DateFormat('MMMM yyyy').format(currentDay)}',
+                                        style: TextStyle(fontSize: 20),
+                                      )
+                                    ],
+                                  ),
+                                  Divider(),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Row(
+                                      children: <Widget>[
+                                        Text(
+                                          'Total habits: ',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18),
+                                        ),
+                                        Text(
+                                          totalHabits.toString(),
+                                          style: TextStyle(fontSize: 18),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Row(
+                                      children: <Widget>[
+                                        Text(
+                                          'Normal habits: ',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18),
+                                        ),
+                                        Text(
+                                          normalHabitsCount.toString(),
+                                          style: TextStyle(fontSize: 18),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Row(
+                                      children: <Widget>[
+                                        Text(
+                                          'Daily tasks: ',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18),
+                                        ),
+                                        Text(
+                                          dailyHabitsCount.toString(),
+                                          style: TextStyle(fontSize: 18),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                      flex: 1,
+                                      child: Row(
+                                        children: <Widget>[
+                                          Text(
+                                            'To-Do tasks: ',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18),
+                                          ),
+                                          Text(
+                                            todoHabitsCount.toString(),
+                                            style: TextStyle(fontSize: 18),
+                                          ),
+                                        ],
+                                      )),
+                                ],
                               ),
-                              Text(
-                                '${DateFormat('MMMM yyyy').format(currentDay)}',
-                                style: TextStyle(fontSize: 20),
-                              )
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: <Widget>[
-                              Text(
-                                'Total habits: ' + totalHabits.toString(),
-                              )
-                            ],
-                          ),
-                          Row(
-                            children: <Widget>[
-                              Text(
-                                'Normal habits: ' +
-                                    normalHabitsCount.toString(),
-                              )
-                            ],
-                          ),
-                          Row(
-                            children: <Widget>[
-                              Text(
-                                'Daily habits: ' +
-                                    dailyHabitsCount.toString(),
-                              )
-                            ],
-                          ),
-                          Row(
-                            children: <Widget>[
-                              Text(
-                                'To-Do tasks: ' +
-                                    todoHabitsCount.toString(),
-                              )
-                            ],
-                          )
-                        ],
-                      ),)],)
-                    )),
+                            )
+                          ],
+                        ))),
               ),
             ),
           ],

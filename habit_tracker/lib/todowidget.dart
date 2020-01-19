@@ -37,7 +37,6 @@ class _ToDoWidgetState extends State<ToDoWidget> {
                 context: context,
                 habit: habit,
               ),
-              
             );
             setState(() {
               //this makes the widget reload after marking it as done/not done
@@ -94,7 +93,7 @@ class _ToDoWidgetState extends State<ToDoWidget> {
                     Expanded(
                       flex: 2,
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Icon(
@@ -113,20 +112,23 @@ class _ToDoWidgetState extends State<ToDoWidget> {
                   ],
                 ),
               ),
-              Visibility(
-                visible: habit.isdone ? true : false,
-                child: Expanded(
-                  flex: 1,
+              Expanded(
+                flex: 1,
+                child: Visibility(
+                  visible: habit.isdone ? true : false,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Ink(
-                        decoration: ShapeDecoration(
-                          color: Colors.white,
-                          shape: CircleBorder(),
-                        ),
-                        child: Icon(Icons.done, color: Colors.lightGreen, size: 45,)
-                      ),
+                          decoration: ShapeDecoration(
+                            color: Colors.lightGreen,
+                            shape: CircleBorder(),
+                          ),
+                          child: Icon(
+                            Icons.done_outline,
+                            color: Colors.white,
+                            size: 45,
+                          )),
                     ],
                   ),
                 ),

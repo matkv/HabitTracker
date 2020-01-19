@@ -92,22 +92,26 @@ class _DetailsViewHabitState extends State<DetailsViewHabit> {
                 thickness: 1.0,
                 color: Colors.red,
               ),
-            ),
-            Expanded(
+            ),Expanded(
               flex: 5,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Column(
                 children: <Widget>[
-                  Flexible(
-                    child: Text(
-                      widget.widget.habit.description,
-                      style: TextStyle(fontSize: 15),
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Flexible(
+                        child: Text(
+                          widget.widget.habit.description,
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      )
+                    ],
                   ),
                   Spacer(),
                   Flexible(
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Flexible(
@@ -124,11 +128,11 @@ class _DetailsViewHabitState extends State<DetailsViewHabit> {
                   Flexible(
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Flexible(
                           child: Text(
-                            "End date: " +
-                                DateFormat.MMMMd("en_US").format(endDate),
+                            "Streak: " + widget.widget.habit.streak.toString(),
                             style: TextStyle(fontSize: 15),
                           ),
                         ),
