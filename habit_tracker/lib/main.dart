@@ -20,11 +20,11 @@ class HabitTracker extends StatelessWidget {
 
         // navigation bar color
         systemNavigationBarColor: Colors.white,
-        systemNavigationBarIconBrightness: Brightness.dark,
+        systemNavigationBarIconBrightness: Brightness.dark,));
 
-        // status bar color
+        /* // status bar color
         statusBarColor: Colors.white,
-        statusBarIconBrightness: Brightness.dark));
+        statusBarIconBrightness: Brightness.dark)); */
 
     return MaterialApp(
       title: 'Habit Tracker',

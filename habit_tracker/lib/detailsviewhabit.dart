@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:habit_tracker/habitdatabase.dart';
+import 'package:habit_tracker/helperfunctions.dart';
 import 'package:habit_tracker/popupdetails.dart';
+import 'package:intl/intl.dart';
 
 class DetailsViewHabit extends StatefulWidget {
   const DetailsViewHabit({
@@ -15,7 +18,20 @@ class DetailsViewHabit extends StatefulWidget {
   _DetailsViewHabitState createState() => _DetailsViewHabitState();
 }
 
-class _DetailsViewHabitState extends State<DetailsViewHabit>{
+class _DetailsViewHabitState extends State<DetailsViewHabit> {
+  int remainingDays;
+  DateTime endDate;
+
+  @override
+  void initState() {
+    var helper = DateHelper();
+    endDate = helper.calculateEndDate(
+        widget.widget.habit.lastupdate, widget.widget.habit.streakinterval);
+    remainingDays = helper.calculateRemainingDays(
+        endDate, widget.widget.habit.streakinterval);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -76,24 +92,57 @@ class _DetailsViewHabitState extends State<DetailsViewHabit>{
                 thickness: 1.0,
                 color: Colors.red,
               ),
-            ),
-            Expanded(
+            ),Expanded(
               flex: 5,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Column(
                 children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Flexible(
+                        child: Text(
+                          widget.widget.habit.description,
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      )
+                    ],
+                  ),
+                  Spacer(),
                   Flexible(
-                    child: Text(
-                      widget.widget.habit.description,
-                      style: TextStyle(fontSize: 15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Flexible(
+                          child: Text(
+                            "Last update: " +
+                                DateFormat.MMMMd("en_US")
+                                    .format(widget.widget.habit.lastupdate),
+                            style: TextStyle(fontSize: 15),
+                          ),
+                        ),
+                      ],
                     ),
-                  )
+                  ),
+                  Flexible(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Flexible(
+                          child: Text(
+                            "Streak: " + widget.widget.habit.streak.toString(),
+                            style: TextStyle(fontSize: 15),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
             Divider(),
-            
             Expanded(
               flex: 2,
               child: Align(
@@ -101,6 +150,13 @@ class _DetailsViewHabitState extends State<DetailsViewHabit>{
                 child: FloatingActionButton(
                     child: Icon(Icons.check),
                     onPressed: () {
+                      setState(() {
+                        widget.widget.habit.lastupdate = DateTime.now();
+                        widget.widget.habit.streak++; //increase streak
+                        var db = HabitDatabase.instance;
+                        db.updateHabit(widget.widget.habit);
+                      });
+
                       Navigator.pop(context, true);
                     }),
               ),

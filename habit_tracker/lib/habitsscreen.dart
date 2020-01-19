@@ -31,6 +31,8 @@ class HabitWidgetsList extends StatefulWidget {
 
 class _HabitWidgetListState extends State<HabitWidgetsList> {
   Future<List<Habit>> _future;
+  var widgetToShow;
+  bool builtfromSwipe = false;
 
   Future<List<Habit>> getHabitsFromDatabase() async {
     var dbHelper = HabitDatabase.instance;
@@ -56,46 +58,66 @@ class _HabitWidgetListState extends State<HabitWidgetsList> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        //future: getHabitsFromDatabase(),
-        future: _future,
-        builder: (BuildContext context, AsyncSnapshot<List<Habit>> snapshot) {
-          var widgetToShow;
-
-          if (snapshot.hasData) {
-            if (snapshot.data.length > 0) {
-              var todowidgets = createHabitWidgets(snapshot);
-              widgetToShow = ListView(
-                scrollDirection: Axis.vertical,
-                children: todowidgets,
-              );
-            } else {
-              //show placeholder text if no to-do tasks were created yet
-              widgetToShow = Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    'No habits found!',
-                  )
-                ],
-              );
+    return RefreshIndicator(
+      child: FutureBuilder(
+          //future: getHabitsFromDatabase(),
+          future: _future,
+          builder: (BuildContext context, AsyncSnapshot<List<Habit>> snapshot) {
+            if (builtfromSwipe == false) {
+              if (snapshot.hasData) {
+                if (snapshot.data.length > 0) {
+                  var todowidgets = createHabitWidgets(snapshot);
+                  widgetToShow = ListView(
+                    scrollDirection: Axis.vertical,
+                    children: todowidgets,
+                  );
+                } else {
+                  //show placeholder text if no to-do tasks were created yet
+                  widgetToShow = Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        'No habits found!',
+                      )
+                    ],
+                  );
+                }
+              } else {
+                //Progress inditcator while todo tasks are loaded
+                widgetToShow = Center(
+                  child: SizedBox(
+                    child: CircularProgressIndicator(),
+                    height: 20,
+                    width: 20,
+                  ),
+                );
+              }
             }
-          } else {
-            //Progress inditcator while todo tasks are loaded
-            widgetToShow = Center(
-              child: SizedBox(
-                child: CircularProgressIndicator(),
-                height: 20,
-                width: 20,
-              ),
-            );
-          }
 
-          return widgetToShow;
-        });
+            return widgetToShow;
+          }),
+      onRefresh: _refreshList,
+    );
   }
 
-  createHabitWidgets(AsyncSnapshot<List<Habit>> snapshot) {
+  List<Widget> createHabitWidgets(AsyncSnapshot<List<Habit>> snapshot) {
     return snapshot.data.map<Widget>((habit) => HabitWidget(habit)).toList();
+  }
+
+  createList(List<Habit> list) {
+    return list.map<Widget>((habit) => HabitWidget(habit)).toList();
+  }
+
+  Future<void> _refreshList() async {
+    await getHabitsFromDatabase().then((value) {
+      setState(() {
+        builtfromSwipe = true;
+
+        widgetToShow = ListView(
+          scrollDirection: Axis.vertical,
+          children: createList(value),
+        );
+      });
+    });
   }
 }

@@ -249,6 +249,8 @@ class _EditDailyState extends State<EditDaily> {
                           habit.activedays =
                               WeekDays.getActivedays(_selectedDays);
 
+                          habit.lastupdate = DateTime.now();
+
                           Future<bool> successful =
                               HabitCreator().updateHabit(habit);
                           if (await successful) {

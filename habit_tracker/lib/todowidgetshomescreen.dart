@@ -64,28 +64,40 @@ class _ToDoWidgetsHomeScreenState extends State<ToDoWidgetsHomeScreen> {
           var formatter = new DateFormat('yyyy-MM-dd');
           String selectedDate = formatter.format(date);
 
-          if (snapshot.hasData && snapshot.data.length > 0) {
-            List<Habit> filteredList = new List<Habit>();
+          if (snapshot.hasData) {
+            if (snapshot.data.length > 0) {
+              List<Habit> filteredList = new List<Habit>();
 
-            snapshot.data.forEach((habit) {
-              if (formatter.format(habit.duedate) == selectedDate) {
-                filteredList.add(habit);
+              snapshot.data.forEach((habit) {
+                if (formatter.format(habit.duedate) == selectedDate) {
+                  filteredList.add(habit);
+                }
+              });
+
+              if (filteredList.length > 0) {
+                var todopreviews = createToDoPreviews(filteredList);
+                widgetToShow = ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: todopreviews,
+                );
+              } else {
+                //show placeholder text if no to-do tasks were created yet
+                widgetToShow = Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      'There is nothing to do today :)',
+                    )
+                  ],
+                );
               }
-            });
-
-            if (filteredList.length > 0){
-              var todopreviews = createToDoPreviews(filteredList);
-              widgetToShow = ListView(
-                scrollDirection: Axis.horizontal,
-                children: todopreviews,
-              );
             } else {
               //show placeholder text if no to-do tasks were created yet
               widgetToShow = Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    'No To-Do tasks found!',
+                    'There is nothing to do today :)',
                   )
                 ],
               );
@@ -108,7 +120,8 @@ class _ToDoWidgetsHomeScreenState extends State<ToDoWidgetsHomeScreen> {
   List<Widget> createToDoPreviews(List<Habit> list) {
     return list
         .map<Widget>((habit) => Card(
-                child: Flex(
+            color: habit.isdone ? Colors.lightGreen : Colors.white,
+            child: Flex(
               direction: Axis.horizontal,
               children: <Widget>[
                 Expanded(

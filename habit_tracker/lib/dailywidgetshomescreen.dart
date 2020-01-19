@@ -3,11 +3,12 @@ import 'package:flutter/widgets.dart';
 import 'package:habit_tracker/dailywidget.dart';
 import 'package:habit_tracker/habit.dart';
 import 'package:habit_tracker/habitdatabase.dart';
+import 'package:habit_tracker/helperfunctions.dart';
 import 'package:habit_tracker/popupdetails.dart';
 
 class DailyWidgetsHomeScreen extends StatefulWidget {
   DateTime currentDay;
-  
+
   DailyWidgetsHomeScreen(this.currentDay);
 
   @override
@@ -20,7 +21,7 @@ class _DailyWidgetsHomeScreenState extends State<DailyWidgetsHomeScreen> {
   Future<List<Habit>> _future;
 
   DateTime day;
-  _DailyWidgetsHomeScreenState(DateTime currentDay){
+  _DailyWidgetsHomeScreenState(DateTime currentDay) {
     day = currentDay;
   }
 
@@ -48,9 +49,8 @@ class _DailyWidgetsHomeScreenState extends State<DailyWidgetsHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    
     var date = widget.currentDay;
-    
+
     return FutureBuilder(
         //future: getHabitsFromDatabase(),
         future: _future,
@@ -64,15 +64,14 @@ class _DailyWidgetsHomeScreenState extends State<DailyWidgetsHomeScreen> {
 
           if (snapshot.hasData && snapshot.data.length > 0) {
             List<Habit> filteredList = new List<Habit>();
-            
-            snapshot.data.forEach((habit){
+
+            snapshot.data.forEach((habit) {
               if (habit.activedays[weekday] == true) {
                 filteredList.add(habit);
               }
             });
 
-            if (filteredList.length > 0){
-
+            if (filteredList.length > 0) {
               var dailypreviews = createDailyPreviews(filteredList);
               widgetToShow = ListView(
                 scrollDirection: Axis.horizontal,
@@ -136,11 +135,11 @@ class _DailyWidgetsHomeScreenState extends State<DailyWidgetsHomeScreen> {
                         direction: Axis.horizontal,
                         children: <Widget>[
                           Expanded(
-                            flex: 4,
+                            flex: 2,
                             child: Column(
                               children: <Widget>[
                                 Expanded(
-                                  flex: 1,
+                                  flex: 2,
                                   child: Row(
                                     children: <Widget>[
                                       Expanded(
@@ -195,7 +194,7 @@ class _DailyWidgetsHomeScreenState extends State<DailyWidgetsHomeScreen> {
                                                 ],
                                               ),
                                             ),
-                                            Divider(),
+                                            
                                           ],
                                         ),
                                       ),
@@ -204,23 +203,42 @@ class _DailyWidgetsHomeScreenState extends State<DailyWidgetsHomeScreen> {
                                 ),
                                 Expanded(
                                   flex: 1,
-                                  child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: habit.activedays
-                                          .map<Widget>((day) => CircleAvatar(
-                                                radius: 10,
-                                                child: Text(
-                                                  day ? 'Y' : 'N',
-                                                  style: TextStyle(
-                                                      color: Colors.white),
-                                                ),
-                                                backgroundColor: day
-                                                    ? Colors.green
-                                                    : Colors.red,
-                                              ))
-                                          .toList()),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: <Widget>[
+                                      Stack(
+                                        alignment: Alignment.center,
+                                        children: <Widget>[
+                                          Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: habit.activedays
+                                                  .map<Widget>(
+                                                      (day) => CircleAvatar(
+                                                            radius: 15,
+                                                            backgroundColor: day
+                                                                ? Colors.green
+                                                                : Colors.red,
+                                                          ))
+                                                  .toList()),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: WeekDays.days
+                                                .map((wd) => Container(
+                                                    padding: EdgeInsets.only(
+                                                        right: 15, left: 10),
+                                                    child: Text(wd[0], style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),))
+                                                .toList(),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),

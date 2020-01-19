@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:numberpicker/numberpicker.dart';
 import 'package:page_transition/page_transition.dart';
 
 import 'package:habit_tracker/habitcreator.dart';
@@ -29,8 +30,11 @@ class _NewHabitState extends State<NewHabitDialog> {
   String _description;
   String _type = "habit"; //maybe make this an enum
   IconData _icon;
+  int _streakinterval = 3;
 
   List<IconData> _selectedIcons = [];
+
+  var pickedinterval;
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +136,8 @@ class _NewHabitState extends State<NewHabitDialog> {
 
                   return null; //TODO check
                 },
-                builder: (FormFieldState<bool> state) { //TODO bool needed?
+                builder: (FormFieldState<bool> state) {
+                  //TODO bool needed?
                   return SizedBox(
                     height: 50,
                     child: GridView.count(
@@ -156,6 +161,33 @@ class _NewHabitState extends State<NewHabitDialog> {
                   );
                 },
               ),
+              Row(
+                children: <Widget>[
+                  Text(
+                    'Streak interval $_streakinterval',
+                    style: TextStyle(fontSize: 25),
+                  ),
+                ],
+              ),
+              Expanded(child:Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Container(
+                      
+                      child: FormField(builder: (FormFieldState<bool> state) {
+                        //TODO bool needed?
+                        return NumberPicker.horizontal(highlightSelectedValue: true,
+                          minValue: 1,
+                          maxValue: 31,
+                          initialValue: _streakinterval,
+                          onChanged: (value) =>
+                              setState(() => _streakinterval = value),
+                        );
+                      }),
+                    ),
+                  )
+                ],
+              ),),
               Expanded(
                 flex: 2,
                 child: Align(
@@ -165,9 +197,10 @@ class _NewHabitState extends State<NewHabitDialog> {
                     icon: Icon(Icons.save),
                     onPressed: () async {
                       if (_formKey.currentState.validate()) {
-                        _formKey.currentState.save();
-                        creator.createHabit(
-                            _title, _description, _type, _icon);
+                        _formKey.currentState.save();                        
+
+                        creator.createHabit(_title, _description, _type, _icon,
+                            DateTime.now(), _streakinterval, 0);  //create habit with streak 0
 
                         Navigator.pop(
                             context,
